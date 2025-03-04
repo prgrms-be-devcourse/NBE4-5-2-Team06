@@ -1,0 +1,46 @@
+server:
+  port: 8080
+
+spring:
+  output:
+    ansi:
+      enabled: always
+
+  profiles:
+    active: dev
+
+  jackson:
+    serialization:
+      fail-on-empty-beans: false
+
+  datasource:
+    url: jdbc:h2:./db_dev;MODE=MySQL
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+    hikari:
+      auto-commit: false
+
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+        highlight_sql: true
+        use_sql_comments: true
+        default_batch_fetch_size: 100
+
+
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.orm.jdbc.bind: TRACE
+    org.hibernate.orm.jdbc.extract: TRACE
+    org.springframework.transaction.interceptor: TRACE
+
+springdoc:
+  default-produces-media-type: application/json;charset=UTF-8
+
