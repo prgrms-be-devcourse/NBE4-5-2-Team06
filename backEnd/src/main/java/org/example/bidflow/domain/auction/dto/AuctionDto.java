@@ -12,6 +12,4 @@ import lombok.Setter;
 public class AuctionDto {
 
     private Long auctionId;
-
-    private String productId;
 }

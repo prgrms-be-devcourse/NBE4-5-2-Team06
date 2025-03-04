@@ -26,12 +26,7 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: false
-    properties:
-      hibernate:
-        format_sql: true
-        highlight_sql: true
-        use_sql_comments: true
-        default_batch_fetch_size: 100
+    database-platform: org.hibernate.dialect.H2Dialect
 
 
 logging:

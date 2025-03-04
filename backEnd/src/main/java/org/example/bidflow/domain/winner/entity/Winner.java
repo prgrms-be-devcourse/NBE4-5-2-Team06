@@ -9,11 +9,10 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "WINNER")
+@Table(name = "WINNER_TABLE")
 public class Winner {
 
     @Id

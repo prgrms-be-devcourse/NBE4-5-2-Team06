@@ -2,49 +2,53 @@ package org.example.bidflow.domain.user.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.example.bidflow.data.Role;
 import org.example.bidflow.domain.bid.entity.Bid;
 import org.example.bidflow.domain.winner.entity.Winner;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "User")
+@Table(name = "USER_TABLE")
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY  )
-    private String  userId;
+    @Column(name = "USER_UUID", nullable = false, length = 50)
+    private String userUuid;
 
-    @Column(nullable = false)
+    @Column(name = "EMAIL", nullable = false, unique = true)
     private String email;
 
-    @Column(nullable = false)
+    @Column(name = "NICKNAME", nullable = false, unique = true)
     private String nickname;
 
-    @Column(nullable = false)
+    @Column(name = "PASSWORD", nullable = false)
     private String password;
 
-    @CreatedDate
-    @Setter(AccessLevel.PRIVATE)
-    private LocalDateTime createDate;
+    @Column(name = "CREATED_DATE")
+    private LocalDateTime createdDate;
 
-    @LastModifiedDate
-    @Setter(AccessLevel.PRIVATE)
-    private LocalDateTime modifiedDate;
+    @Column(name = "MODIFIED_AT")
+    private LocalDateTime modifiedAt;
 
-    @OneToMany
-    private Winner winner;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "ROLE")
+    private Role role;
 
-    @OneToMany
-    private Bid bid;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @Builder.Default
+    private List<Winner> winners = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @Builder.Default
+    private List<Bid> bids = new ArrayList<>();
 }
 
 

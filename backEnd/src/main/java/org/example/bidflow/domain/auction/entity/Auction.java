@@ -2,43 +2,53 @@ package org.example.bidflow.domain.auction.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.example.bidflow.data.AuctionStatus;
 import org.example.bidflow.domain.bid.entity.Bid;
 import org.example.bidflow.domain.product.entity.Product;
 import org.example.bidflow.domain.winner.entity.Winner;
 
 import java.time.LocalDateTime;
-
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "Auction")
+@Table(name = "AUCTION_TABLE")
 public class Auction {
 
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
-        private Long auctionID;
+        @Column(name = "AUCTION_ID")
+        private Long auctionId;
 
-        @Column(nullable = false)
-        private String productId;
+        @OneToOne
+        @JoinColumn(name = "PRODUCT_ID", nullable = false)
+        private Product product;
 
+        @Column(name = "START_PRICE")
         private Integer startPrice;
 
-        private  Integer minBid;
+        @Column(name = "MIN_BID")
+        private Integer minBid;
 
+        @Column(name = "START_TIME")
         private LocalDateTime startTime;
 
+        @Column(name = "END_TIME")
         private LocalDateTime endTime;
 
-        @OneToOne
-        private Product porduct;
+        @Enumerated(EnumType.STRING)
+        @Column(name = "STATUS")
+        private AuctionStatus status;
 
-        @OneToOne
+        @OneToOne(mappedBy = "auction", cascade = CascadeType.ALL)
         private Winner winner;
 
-        @OneToMany
-        private Bid bid;
+        @OneToMany(mappedBy = "auction", cascade = CascadeType.ALL)
+        @Builder.Default
+        private List<Bid> bids = new ArrayList<>();
+
 }
