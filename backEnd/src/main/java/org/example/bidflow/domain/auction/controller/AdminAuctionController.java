@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AdminAuctionController {
     private final AuctionService auctionService;
 
+    // 경매 등록 컨트롤러
     @PostMapping
     public ResponseEntity<RsData<AuctionResponse>> createAuction(@Valid @RequestBody AuctionRequest requestDto) {
         RsData<AuctionResponse> response = auctionService.createAuction(requestDto);

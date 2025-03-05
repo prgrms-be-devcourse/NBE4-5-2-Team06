@@ -13,6 +13,7 @@ public class AuctionResponse {
     private AuctionData auction;
     private ProductResponse product;
 
+    // 엔티티를 DTO로 변환
     public static AuctionResponse of(Auction auction) {
         return AuctionResponse.builder()
                 .auction(AuctionData.of(auction))
@@ -20,6 +21,7 @@ public class AuctionResponse {
                 .build();
     }
 
+    // 상품 정보도 포함하는 경매 정보 DTO
     @Getter
     @Builder
     public static class AuctionData {

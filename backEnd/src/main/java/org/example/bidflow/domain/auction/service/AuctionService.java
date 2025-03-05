@@ -22,22 +22,28 @@ public class AuctionService {
     private final AuctionRepository auctionRepository;
     private final ProductRepository productRepository;
 
+    // 경매 등록 서비스
     @Transactional
     public RsData<AuctionResponse> createAuction(AuctionRequest requestDto) {
+
+        // 경매 종료 시간이 시작 시간보다 빠르면 예외 처리
         if (requestDto.getStartTime().isAfter(requestDto.getEndTime())) {
             throw new ServiceException("400", "경매 종료 시간이 시작 시간보다 빠를 수 없습니다.");
         }
 
+        // 최소 등록 시간 검증 (현재 시간 기준 최소 2일 전)
         LocalDateTime now = LocalDateTime.now();
         if (requestDto.getStartTime().isBefore(now.plusDays(2))) {
             throw new ServiceException("404", "상품 등록 시간은 최소 2일 전부터 가능합니다.");
         }
 
+        // 상품 중복 검증
         Optional<Product> existingProduct = productRepository.findByProductName(requestDto.getProductName());
         if (existingProduct.isPresent()) {
             throw new ServiceException("400", "이미 등록된 상품입니다.");
         }
 
+        // 상품 정보 저장
         Product product = Product.builder()
                 .productName(requestDto.getProductName())
                 .imageUrl(requestDto.getImageUrl())
@@ -45,6 +51,7 @@ public class AuctionService {
                 .build();
         productRepository.save(product);
 
+        // 경매 정보 저장
         Auction auction = Auction.builder()
                 .product(product)
                 .startPrice(requestDto.getStartPrice())
@@ -55,6 +62,7 @@ public class AuctionService {
                 .build();
         auctionRepository.save(auction);
 
+        // 성공 응답 반환
         return new RsData<>("201", "경매가 등록되었습니다.", AuctionResponse.of(auction));
     }
 }
