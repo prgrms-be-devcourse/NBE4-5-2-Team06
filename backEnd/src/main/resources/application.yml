@@ -22,6 +22,7 @@ spring:
     hikari:
       auto-commit: false
 
+
   jpa:
     open-in-view: false
     hibernate:
@@ -47,3 +48,4 @@ logging:
 
 springdoc:
   default-produces-media-type: application/json;charset=UTF-8
+

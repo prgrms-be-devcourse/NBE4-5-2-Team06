@@ -1,35 +1,56 @@
 package org.example.bidflow.domain.auction.service;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.example.bidflow.data.AuctionStatus;
-import org.example.bidflow.domain.auction.dto.AuctionRequest;
 import org.example.bidflow.domain.auction.dto.AuctionResponse;
 import org.example.bidflow.domain.auction.entity.Auction;
 import org.example.bidflow.domain.auction.repository.AuctionRepository;
+import jakarta.transaction.Transactional;
+import org.example.bidflow.data.AuctionStatus;
+import org.example.bidflow.domain.auction.dto.AuctionRequest;
 import org.example.bidflow.domain.product.entity.Product;
 import org.example.bidflow.domain.product.repository.ProductRepository;
 import org.example.bidflow.global.dto.RsData;
 import org.example.bidflow.domain.auction.dto.WinnerResponseDto;
-import org.example.bidflow.domain.auction.repository.AuctionRepository;
 import org.example.bidflow.domain.bid.entity.Bid;
 import org.example.bidflow.domain.bid.repository.BidRepository;
 import org.example.bidflow.domain.winner.entity.Winner;
 import org.example.bidflow.domain.winner.repository.WinnerRepository;
 import org.example.bidflow.domain.auction.dto.AuctionDetailResponse;
-import org.example.bidflow.domain.auction.entity.Auction;
 import org.example.bidflow.global.exception.ServiceException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class AuctionService {
+
     private final AuctionRepository auctionRepository;
-    private final ProductRepository productRepository;
+    private final BidRepository bidRepository;
+    private final WinnerRepository winnerRepository;
+
+    public List<AuctionResponse> getAllAuctions()  {
+        
+      // 경매 목록 조회
+        List<Auction> auctions = auctionRepository.findAllAuctions();
+
+        return auctions.stream()
+                .map(auction -> AuctionResponse.builder()
+                        .auctionId(auction.getAuctionId())
+                        .productName(auction.getProduct().getProductName())  // Product에서 상품명 가져오기
+                        .imageUrl(auction.getProduct().getImageUrl())      // Product에서 이미지 URL 가져오기
+                        .currentPrice(auction.getStartPrice())  // 현재 가격 가져오기
+                        .status(auction.getStatus().toString())  // Enum을 String으로 변환하기
+                        .startTime(auction.getStartTime())
+                        .endTime(auction.getEndTime())
+                        .build())
+                .collect(Collectors.toList());
+
+    }
 
     // 경매 등록 서비스
     @Transactional
@@ -75,10 +96,7 @@ public class AuctionService {
         return new RsData<>("201", "경매가 등록되었습니다.", AuctionResponse.from(auction));
     }
 
-    private final AuctionRepository auctionRepository;
-    private final BidRepository bidRepository;
-    private final WinnerRepository winnerRepository;
-
+  
     // 외부 요청에 대한 거래 종료 기능
     @Transactional
     public WinnerResponseDto closeAuction(Long auctionId) {
