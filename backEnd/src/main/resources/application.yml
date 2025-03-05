@@ -15,13 +15,12 @@ spring:
 
 
   datasource:
-    url: jdbc:h2:./db_dev;MODE=MySQL
+    url: jdbc:h2:./db_dev;MODE=MySQL;INIT=RUNSCRIPT FROM 'classpath:data.sql'
     username: sa
     password:
     driver-class-name: org.h2.Driver
     hikari:
       auto-commit: false
-
 
   jpa:
     open-in-view: false

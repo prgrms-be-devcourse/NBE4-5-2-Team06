@@ -15,7 +15,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@Builder(toBuilder = true)
 @Table(name = "AUCTION_TABLE")
 public class Auction {
 
@@ -51,4 +51,12 @@ public class Auction {
         @Builder.Default
         private List<Bid> bids = new ArrayList<>();
 
+        public void setStatus(AuctionStatus status) {
+                this.status = status;
+        }
+
+        // 낙찰자 설정 메서드
+        public void setWinner(Winner winner) {
+                this.winner = winner;
+        }
 }
