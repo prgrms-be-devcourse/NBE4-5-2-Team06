@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 public class BidDto{
 
     private Long bidId;            // 입찰 ID
-    private UserSignUpRequest user; // 사용자 정보 (UserSignUpRequest로 변경)
+    private UserSignUpRequest user; // 사용자 정보
     private Integer amount;        // 입찰 금액
     private LocalDateTime bidTime; // 입찰 시간
 

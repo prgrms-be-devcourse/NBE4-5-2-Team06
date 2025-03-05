@@ -18,16 +18,8 @@ public class AuctionService {
     private final AuctionRepository auctionRepository;
 
 
-
-        public List<AuctionDto> getAllAuctions() {
-            return auctionRepository.findAll().stream()
-                    .map(AuctionDto::from)  // 각 경매 항목을 AuctionDto로 변환
-                    .collect(Collectors.toList());
-
+    public List<AuctionDto> getAllAuctions() {
+        // AuctionRepository에서 반환한 AuctionDto를 그대로 반환
+        return auctionRepository.findAllAuctions();
     }
-
-//    public List<AuctionListResponseDto> getAllAuctions() {
-//        // AuctionRepository에서 반환한 AuctionDto를 그대로 반환
-//        return auctionRepository.findAllAuctions();
-//    }
 }

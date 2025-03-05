@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.example.bidflow.domain.auction.dto.AuctionDto;
 import org.example.bidflow.domain.user.dto.UserSignUpRequest;
+import org.example.bidflow.domain.winner.entity.Winner;
 
 import java.time.LocalDateTime;
 
@@ -20,7 +21,7 @@ public class WinnerDto {
     private AuctionDto auction;   // 경매 정보
     private Integer winningBid;   // 낙찰 금액
     private LocalDateTime winTime; // 낙찰 시간
-
+//
 //    // Winner 엔티티를 WinnerDto로 변환하는 메서드
 //    public static WinnerDto from(Winner winner) {
 //        UserSignUpRequest userSignUpRequest = UserSignUpRequest.builder()
