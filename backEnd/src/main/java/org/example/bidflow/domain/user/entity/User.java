@@ -32,11 +32,13 @@ public class User {
     @Column(name = "PASSWORD", nullable = false)
     private String password;
 
+    @Builder.Default
     @Column(name = "CREATED_DATE")
-    private LocalDateTime createdDate;
+    private LocalDateTime createdDate = LocalDateTime.now();
 
+    @Builder.Default
     @Column(name = "MODIFIED_AT")
-    private LocalDateTime modifiedAt;
+    private LocalDateTime modifiedAt = LocalDateTime.now();
 
     @Enumerated(EnumType.STRING)
     @Column(name = "ROLE")
