@@ -1,13 +1,12 @@
 package org.example.bidflow.domain.auction.dto;
 
 import lombok.*;
-import org.example.bidflow.domain.auction.entity.Auction;
+
 import java.time.LocalDateTime;
-import org.example.bidflow.domain.product.dto.ProductResponse;
 
 @Getter
 @Builder
-public class AuctionResponse {
+public class AuctionCheckResponse {
 
     private Long auctionId;
     private String productName;
@@ -19,9 +18,9 @@ public class AuctionResponse {
 
 
     //  생성자
-    public static AuctionResponse from(Long auctionId, String productName, String imageUrl, Integer currentPrice,
+    public static AuctionCheckResponse from(Long auctionId, String productName, String imageUrl, Integer currentPrice,
                                        String status, LocalDateTime startTime, LocalDateTime endTime) {
-        return AuctionResponse.builder()
+        return AuctionCheckResponse.builder()
                 .auctionId(auctionId)
                 .productName(productName)
                 .imageUrl(imageUrl)
