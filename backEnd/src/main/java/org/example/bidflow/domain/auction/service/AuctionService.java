@@ -63,7 +63,7 @@ public class AuctionService {
         auctionRepository.save(auction);
 
         // 성공 응답 반환
-        return new RsData<>("201", "경매가 등록되었습니다.", AuctionResponse.of(auction));
+        return new RsData<>("201", "경매가 등록되었습니다.", AuctionResponse.from(auction));
     }
 
     public final AuctionRepository auctionRepository;
