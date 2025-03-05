@@ -1,13 +1,11 @@
 package org.example.bidflow.domain.auction.service;
 
 import lombok.RequiredArgsConstructor;
-import org.example.bidflow.domain.auction.dto.AuctionCheckResponse;
-import org.example.bidflow.domain.auction.dto.AuctionCreateDataResponse;
+import org.example.bidflow.domain.auction.dto.*;
 import org.example.bidflow.domain.auction.entity.Auction;
 import org.example.bidflow.domain.auction.repository.AuctionRepository;
 import jakarta.transaction.Transactional;
 import org.example.bidflow.data.AuctionStatus;
-import org.example.bidflow.domain.auction.dto.AuctionRequest;
 import org.example.bidflow.domain.product.entity.Product;
 import org.example.bidflow.domain.product.repository.ProductRepository;
 import org.example.bidflow.global.dto.RsData;
@@ -15,7 +13,6 @@ import org.example.bidflow.domain.winner.dto.WinnerResponseDto;
 import org.example.bidflow.domain.bid.entity.Bid;
 import org.example.bidflow.domain.bid.repository.BidRepository;
 import org.example.bidflow.domain.winner.entity.Winner;
-import org.example.bidflow.domain.auction.dto.AuctionDetailResponse;
 import org.example.bidflow.global.exception.ServiceException;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
@@ -52,7 +49,7 @@ public class AuctionService {
 
     // 경매 등록 서비스
     @Transactional
-    public RsData<AuctionCreateDataResponse> createAuction(AuctionRequest requestDto) {
+    public RsData<AuctionCreateResponse> createAuction(AuctionRequest requestDto) {
 
         // 경매 종료 시간이 시작 시간보다 빠르면 예외 처리
         if (requestDto.getStartTime().isAfter(requestDto.getEndTime())) {
@@ -85,7 +82,7 @@ public class AuctionService {
         auctionRepository.save(auction);
 
         // 성공 응답 반환
-        return new RsData<>("201", "경매가 등록되었습니다.", AuctionCreateDataResponse.from(auction));
+        return new RsData<>("201", "경매가 등록되었습니다.", AuctionCreateResponse.from(auction));
     }
 
     // 외부 요청에 대한 거래 종료 기능
