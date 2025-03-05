@@ -1,7 +1,8 @@
 package org.example.bidflow.domain.auction.service;
 
 import lombok.RequiredArgsConstructor;
-import org.example.bidflow.domain.auction.dto.AuctionResponse;
+import org.example.bidflow.domain.auction.dto.AuctionCheckResponse;
+import org.example.bidflow.domain.auction.dto.AuctionCreateDataResponse;
 import org.example.bidflow.domain.auction.entity.Auction;
 import org.example.bidflow.domain.auction.repository.AuctionRepository;
 import jakarta.transaction.Transactional;
@@ -30,13 +31,13 @@ public class AuctionService {
     private final BidRepository bidRepository;
     private final ProductRepository productRepository;
 
-    public List<AuctionResponse> getAllAuctions()  {
+    public List<AuctionCheckResponse> getAllAuctions()  {
         
       // 경매 목록 조회
         List<Auction> auctions = auctionRepository.findAllAuctions();
 
         return auctions.stream()
-                .map(auction -> AuctionResponse.builder()
+                .map(auction -> AuctionCheckResponse.builder()
                         .auctionId(auction.getAuctionId())
                         .productName(auction.getProduct().getProductName())  // Product에서 상품명 가져오기
                         .imageUrl(auction.getProduct().getImageUrl())      // Product에서 이미지 URL 가져오기
@@ -51,7 +52,7 @@ public class AuctionService {
 
     // 경매 등록 서비스
     @Transactional
-    public RsData<AuctionResponse> createAuction(AuctionRequest requestDto) {
+    public RsData<AuctionCreateDataResponse> createAuction(AuctionRequest requestDto) {
 
         // 경매 종료 시간이 시작 시간보다 빠르면 예외 처리
         if (requestDto.getStartTime().isAfter(requestDto.getEndTime())) {
@@ -84,10 +85,9 @@ public class AuctionService {
         auctionRepository.save(auction);
 
         // 성공 응답 반환
-        return new RsData<>("201", "경매가 등록되었습니다.", AuctionResponse.from(auction));
+        return new RsData<>("201", "경매가 등록되었습니다.", AuctionCreateDataResponse.from(auction));
     }
 
-  
     // 외부 요청에 대한 거래 종료 기능
     @Transactional
     public WinnerResponseDto closeAuction(Long auctionId) {
