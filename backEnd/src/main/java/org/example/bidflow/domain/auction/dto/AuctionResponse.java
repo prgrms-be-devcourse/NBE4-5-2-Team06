@@ -4,7 +4,6 @@ import lombok.Builder;
 import lombok.Getter;
 import org.example.bidflow.domain.auction.entity.Auction;
 import org.example.bidflow.domain.product.dto.ProductResponse;
-import org.example.bidflow.domain.product.entity.Product;
 
 import java.time.LocalDateTime;
 
@@ -14,7 +13,7 @@ public class AuctionResponse {
     private AuctionData auction;
     private ProductResponse product;
 
-    public static AuctionResponse of(Auction auction, Product product) {
+    public static AuctionResponse of(Auction auction) {
         return AuctionResponse.builder()
                 .auction(AuctionData.of(auction))
                 .product(ProductResponse.from(auction.getProduct()))
