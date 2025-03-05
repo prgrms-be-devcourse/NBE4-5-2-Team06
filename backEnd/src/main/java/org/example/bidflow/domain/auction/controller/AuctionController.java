@@ -1,8 +1,8 @@
 package org.example.bidflow.domain.auction.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.example.bidflow.domain.auction.dto.AuctionResponse;
-import org.example.bidflow.domain.auction.entity.Auction;
+import org.example.bidflow.domain.auction.dto.AuctionCheckResponse;
+import org.example.bidflow.domain.winner.dto.WinnerResponseDto;
 import org.example.bidflow.domain.auction.service.AuctionService;
 import org.example.bidflow.global.dto.RsData;
 import org.springframework.http.HttpStatus;

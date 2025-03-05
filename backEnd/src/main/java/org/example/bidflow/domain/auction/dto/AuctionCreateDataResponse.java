@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Builder
-public class AuctionDataResponse {
+public class AuctionCreateDataResponse {
     private final Long auctionId;
     private final Long productId;
     private final Integer startPrice;
@@ -19,8 +19,8 @@ public class AuctionDataResponse {
 
     // 경매 등록 정보 DTO
     // Auction 엔티티를 DTO로 변환
-    public static AuctionDataResponse from(Auction auction) {
-        return AuctionDataResponse.builder()
+    public static AuctionCreateDataResponse from(Auction auction) {
+        return AuctionCreateDataResponse.builder()
                 .auctionId(auction.getAuctionId())
                 .productId(auction.getProduct().getProductId())
                 .startPrice(auction.getStartPrice())
