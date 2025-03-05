@@ -10,16 +10,13 @@ import org.example.bidflow.domain.auction.dto.AuctionRequest;
 import org.example.bidflow.domain.product.entity.Product;
 import org.example.bidflow.domain.product.repository.ProductRepository;
 import org.example.bidflow.global.dto.RsData;
-import org.example.bidflow.domain.auction.dto.WinnerResponseDto;
+import org.example.bidflow.domain.winner.dto.WinnerResponseDto;
 import org.example.bidflow.domain.bid.entity.Bid;
 import org.example.bidflow.domain.bid.repository.BidRepository;
 import org.example.bidflow.domain.winner.entity.Winner;
-import org.example.bidflow.domain.winner.repository.WinnerRepository;
 import org.example.bidflow.domain.auction.dto.AuctionDetailResponse;
 import org.example.bidflow.global.exception.ServiceException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.List;
@@ -31,7 +28,7 @@ public class AuctionService {
 
     private final AuctionRepository auctionRepository;
     private final BidRepository bidRepository;
-    private final WinnerRepository winnerRepository;
+    private final ProductRepository productRepository;
 
     public List<AuctionResponse> getAllAuctions()  {
         
@@ -65,12 +62,6 @@ public class AuctionService {
         LocalDateTime now = LocalDateTime.now();
         if (requestDto.getStartTime().isBefore(now.plusDays(2))) {
             throw new ServiceException("404", "상품 등록 시간은 최소 2일 전부터 가능합니다.");
-        }
-
-        // 상품 중복 검증
-        Optional<Product> existingProduct = productRepository.findByProductName(requestDto.getProductName());
-        if (existingProduct.isPresent()) {
-            throw new ServiceException("400", "이미 등록된 상품입니다.");
         }
 
         // 상품 정보 저장
@@ -138,12 +129,12 @@ public class AuctionService {
     }
 
     // 경매 데이터 검증 후 DTO 반환
-    @Transactional(readOnly = true)
+    @Transactional
     public AuctionDetailResponse getAuctionDetail(Long auctionId) {
         Auction auction = auctionRepository.findByAuctionId(auctionId)      // 경매 ID로 경매 객체 존재 여부 확인
                 .orElseThrow(() -> new ServiceException("400-1", "해당 경매 상품을 찾을 수 없습니다."));
 
-        if (auction.getStatus() != AuctionStatus.UPCOMING) {
+        if (auction.getStatus() != AuctionStatus.ONGOING) {
             throw new ServiceException("400-2", "진행 중인 경매가 아닙니다.");
         }
 
