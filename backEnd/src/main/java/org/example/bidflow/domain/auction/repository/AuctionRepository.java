@@ -1,7 +1,6 @@
 package org.example.bidflow.domain.auction.repository;
 
 
-import org.example.bidflow.domain.auction.dto.AuctionResponse;
 import org.example.bidflow.domain.auction.entity.Auction;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
