@@ -24,10 +24,10 @@ public class AuctionController {
     private final AuctionService auctionService;
 
     @GetMapping
-    public ResponseEntity<RsData<List<AuctionResponse>>> getAllAuctions() {
+    public ResponseEntity<RsData<List<AuctionCheckResponse>>> getAllAuctions() {
         // AuctionService에서 AuctionResponse 리스트를 반환
-        List<AuctionResponse> response = auctionService.getAllAuctions();
-        RsData<List<AuctionResponse>> rsData = new RsData<>("200", "전체 조회가 완료되었습니다.", response);
+        List<AuctionCheckResponse> response = auctionService.getAllAuctions();
+        RsData<List<AuctionCheckResponse>> rsData = new RsData<>("200", "전체 조회가 완료되었습니다.", response);
         return ResponseEntity.ok(rsData);
     }
 
