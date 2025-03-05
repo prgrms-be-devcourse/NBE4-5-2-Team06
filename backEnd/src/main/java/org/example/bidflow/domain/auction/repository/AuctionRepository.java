@@ -10,5 +10,9 @@ import java.util.Optional;
 
 @Repository
 public interface AuctionRepository extends JpaRepository<Auction,Long> {
-    Optional<Auction> findByAuctionIdAndStatus(Long auctionId, AuctionStatus status);
+    
+  Optional<Auction> findByAuctionIdAndStatus(Long auctionId, AuctionStatus status);
+
+  Optional<Auction> findByAuctionId(Long auctionId);
+ 
 }

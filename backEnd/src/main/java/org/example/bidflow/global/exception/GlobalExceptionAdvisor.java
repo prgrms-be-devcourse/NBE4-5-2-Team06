@@ -22,7 +22,7 @@ public class GlobalExceptionAdvisor {
 
         String message = e.getBindingResult().getFieldErrors()
                 .stream()
-                .map(fe -> fe.getField() + " : " + fe.getCode() + " : "  + fe.getDefaultMessage())
+                .map(fe -> fe.getDefaultMessage())  // 메시지만 출력하도록 변경
                 .sorted()
                 .collect(Collectors.joining("\n"));
 
