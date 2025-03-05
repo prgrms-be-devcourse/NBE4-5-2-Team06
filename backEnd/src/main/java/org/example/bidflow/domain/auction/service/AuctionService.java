@@ -23,6 +23,7 @@ public class AuctionService {
     private final BidRepository bidRepository;
     private final WinnerRepository winnerRepository;
 
+    // 외부 요청에 대한 거래 종료 기능
     @Transactional
     public WinnerResponseDto closeAuction(Long auctionId) {
         Auction auction = auctionRepository.findByAuctionIdAndStatus(auctionId, AuctionStatus.ONGOING)
