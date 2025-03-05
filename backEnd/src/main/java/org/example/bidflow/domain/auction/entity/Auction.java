@@ -15,7 +15,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@Builder(toBuilder = true)
 @Table(name = "AUCTION_TABLE")
 public class Auction {
 
@@ -50,5 +50,4 @@ public class Auction {
         @OneToMany(mappedBy = "auction", cascade = CascadeType.ALL)
         @Builder.Default
         private List<Bid> bids = new ArrayList<>();
-
 }
