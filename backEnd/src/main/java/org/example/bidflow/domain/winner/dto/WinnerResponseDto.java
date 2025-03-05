@@ -1,4 +1,4 @@
-package org.example.bidflow.domain.auction.dto;
+package org.example.bidflow.domain.winner.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,7 +7,6 @@ import lombok.Setter;
 import org.example.bidflow.domain.winner.entity.Winner;
 
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class WinnerResponseDto {
