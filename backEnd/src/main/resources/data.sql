@@ -1,5 +1,5 @@
 -- USER 테이블
-INSERT INTO USER_TABLE (USER_UUID, EMAIL, NICKNAME, PASSWORD, CREATED_DATE, MODIFIED_AT, ROLE)
+INSERT INTO USER_TABLE (USER_UUID, EMAIL, NICKNAME, PASSWORD, CREATED_AT, MODIFIED_AT, ROLE)
 VALUES
     ('user1', 'user1@example.com', 'AuctionMaster', 'password123', '1990-01-01', '2025-03-05', 'USER'),
     ('user2', 'user2@example.com', 'BidKing', 'password456', '1985-06-15', '2025-03-05', 'USER'),

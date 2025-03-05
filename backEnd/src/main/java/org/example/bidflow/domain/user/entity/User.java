@@ -1,10 +1,16 @@
 package org.example.bidflow.domain.user.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.example.bidflow.data.Role;
 import org.example.bidflow.domain.bid.entity.Bid;
 import org.example.bidflow.domain.winner.entity.Winner;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -16,6 +22,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "USER_TABLE")
 public class User {
 
@@ -32,10 +39,12 @@ public class User {
     @Column(name = "PASSWORD", nullable = false)
     private String password;
 
-    @Column(name = "CREATED_DATE")
+    @Column(name = "CREATED_AT")
+    @CreatedDate
     private LocalDateTime createdDate;
 
     @Column(name = "MODIFIED_AT")
+    @LastModifiedDate
     private LocalDateTime modifiedAt;
 
     @Enumerated(EnumType.STRING)
