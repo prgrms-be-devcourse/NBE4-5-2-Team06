@@ -46,15 +46,18 @@ public class AuctionService {
         Winner winner = Winner.builder()
                 .auction(auction)
                 .user(winningBid.getUser()) // 사용자: 낙찰 테이블 -> 사용자 테이블
-                .winningBid(winningBid.getAmount())
+                .winningBid(/*winningBid.getAmount()*/123123123)
                 .winTime(LocalDateTime.now())
                 .build();
 
         // 경매 상태 변경
-        auction = auction.toBuilder()
+        /*auction = auction.toBuilder()
                 .status(AuctionStatus.FINISHED)
                 .winner(winner)
                 .build();
+        auctionRepository.save(auction);*/
+        auction.setStatus(AuctionStatus.FINISHED);
+        auction.setWinner(winner);
 
         return new WinnerResponseDto(winner);
     }

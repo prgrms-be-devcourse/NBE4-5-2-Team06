@@ -50,4 +50,13 @@ public class Auction {
         @OneToMany(mappedBy = "auction", cascade = CascadeType.ALL)
         @Builder.Default
         private List<Bid> bids = new ArrayList<>();
+
+        public void setStatus(AuctionStatus status) {
+                this.status = status;
+        }
+
+        // 낙찰자 설정 메서드
+        public void setWinner(Winner winner) {
+                this.winner = winner;
+        }
 }
