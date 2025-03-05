@@ -50,5 +50,3 @@ public class User {
     @Builder.Default
     private List<Bid> bids = new ArrayList<>();
 }
-
-
