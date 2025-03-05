@@ -128,14 +128,24 @@ public class AuctionService {
     // 경매 데이터 검증 후 DTO 반환
     @Transactional
     public AuctionDetailResponse getAuctionDetail(Long auctionId) {
-        Auction auction = auctionRepository.findByAuctionId(auctionId)      // 경매 ID로 경매 객체 존재 여부 확인
-                .orElseThrow(() -> new ServiceException("400-1", "해당 경매 상품을 찾을 수 없습니다."));
+        Auction auction = getAuctionWithValidation(auctionId); // 경매 ID로 경매 데이터 조회 및 상태 검증
+        return AuctionDetailResponse.from(auction); // DTO 변환 후 반환
+    }
 
-        if (auction.getStatus() != AuctionStatus.ONGOING) {
+    // 경매 조회 및 상태 검증 메서드
+    public Auction getAuctionWithValidation(Long auctionId) {
+        // 경매 조회
+        Auction auction = auctionRepository.findByAuctionId(auctionId)
+                .orElseThrow(() -> new ServiceException("400-1", "경매가 존재하지 않습니다."));
+
+        // 경매 상태 검증
+        if (!auction.getStatus().equals(AuctionStatus.ONGOING)) {
             throw new ServiceException("400-2", "진행 중인 경매가 아닙니다.");
         }
 
-        return AuctionDetailResponse.from(auction); // DTO 변환 후 반환
+        return auction;
     }
+
+
 
 }

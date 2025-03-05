@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.bidflow.domain.auction.dto.AuctionBidRequest;
 import org.example.bidflow.domain.auction.entity.Auction;
 import org.example.bidflow.domain.auction.repository.AuctionRepository;
+import org.example.bidflow.domain.auction.service.AuctionService;
 import org.example.bidflow.domain.bid.dto.BidCreateResponse;
 import org.example.bidflow.domain.bid.entity.Bid;
 import org.example.bidflow.domain.bid.repository.BidRepository;
@@ -19,14 +20,14 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class BidService {
 
-    private final AuctionRepository auctionRepository;
+    private final AuctionService auctionService;
     private final UserService userService;
     private final BidRepository bidRepository;
 
     @Transactional
     public BidCreateResponse createBid(Long auctionId, AuctionBidRequest request) {
         // 경매 상태 검증
-        Auction auction = getAuction(auctionId);
+        Auction auction = auctionService.getAuctionWithValidation(auctionId);
 
         // 사용자 검증
         User user = userService.getUserByUuid(request.getUserUuid());
@@ -45,12 +46,6 @@ public class BidService {
 
         // BidDto 변환 후 반환
         return BidCreateResponse.from(bid);
-    }
-
-    // 경매 조회 메서드
-    private Auction getAuction(Long auctionId) {
-        return auctionRepository.findByAuctionId(auctionId)
-                .orElseThrow(() -> new ServiceException("400-1", "경매가 존재하지 않습니다."));
     }
 
     // 입찰 금액 검증 메서드
