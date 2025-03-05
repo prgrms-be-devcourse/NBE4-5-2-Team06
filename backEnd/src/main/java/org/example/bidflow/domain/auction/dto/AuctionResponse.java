@@ -2,8 +2,8 @@ package org.example.bidflow.domain.auction.dto;
 
 import lombok.*;
 import org.example.bidflow.domain.auction.entity.Auction;
-
 import java.time.LocalDateTime;
+import org.example.bidflow.domain.product.dto.ProductResponse;
 
 @Getter
 @Builder
@@ -31,3 +31,4 @@ public class AuctionResponse {
                 .endTime(endTime).build();
     }
 }
+
