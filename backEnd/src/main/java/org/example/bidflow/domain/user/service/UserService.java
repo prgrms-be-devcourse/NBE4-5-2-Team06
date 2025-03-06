@@ -54,7 +54,12 @@ public class UserService {
         userRepository.save(user);
 
         return UserSignUpResponse.from(user);
+    }
 
+    // UUID를 기반으로 유저 검증
+    public User getUserByUuid(String uuid) {
+        return userRepository.findByUserUuid(uuid)
+                .orElseThrow(() -> new ServiceException("400", "사용자가 존재하지 않습니다."));
     }
 
     public UserSignInResponse login(UserSignInRequest request) {

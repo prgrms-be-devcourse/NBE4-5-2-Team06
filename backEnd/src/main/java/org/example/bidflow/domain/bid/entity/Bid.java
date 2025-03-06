@@ -33,4 +33,26 @@ public class Bid {
 
     @Column(name = "BID_TIME")
     private LocalDateTime bidTime;
+
+    public Bid(Auction auction, User user) {
+        this.auction = auction;
+        this.user = user;
+    }
+
+    // 입찰을 생성하는 static 메서드
+    public static Bid createBid(Auction auction, User user, Integer amount, LocalDateTime bidTime) {
+        return Bid.builder()
+                .auction(auction)
+                .user(user)
+                .amount(amount)
+                .bidTime(bidTime)
+                .build();
+    }
+
+    // Bid 엔티티 수정
+    public Bid updateAmount(Integer newAmount) {
+        this.amount = newAmount;
+        this.bidTime = LocalDateTime.now(); // 금액 변경 시 입찰 시간 갱신
+        return this; // 갱신된 객체를 반환
+    }
 }
