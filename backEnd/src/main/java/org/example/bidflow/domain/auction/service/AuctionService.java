@@ -28,7 +28,7 @@ public class AuctionService {
     private final BidRepository bidRepository;
     private final ProductRepository productRepository;
 
-    // 모든 경매 목록을 조회하고 AuctionResponse DTO 리스트로 변환
+    // 사용자-모든 경매 목록을 조회하고 AuctionResponse DTO 리스트로 변환
     public List<AuctionCheckResponse> getAllAuctions()  {
         // 경매 목록 조회 <AuctionRepository에서 조회>
         List<Auction> auctions = auctionRepository.findAllAuctions();
@@ -36,7 +36,18 @@ public class AuctionService {
             throw new ServiceException("404", "경매 목록 조회 실패");
         }
         return auctions.stream()
-                .map(AuctionCheckResponse::from)  // Auction 엔티티를 AuctionResponse DTO로 변환
+                .map(AuctionCheckResponse::from)  // Auction 엔티티를 AuctionCheckResponse DTO로 변환
+                .collect(Collectors.toList());
+    }
+
+    //관리자- 모든 경매 목록을 조회
+    public List<AuctionAdminResponse> getAdminAllAuctions() {
+        //경매 목록과 관련된 상품 및 낙찰자 정보를 함께 가져옴
+        return Optional.ofNullable(auctionRepository.findAllAuctionsWithProductAndWinner())//경매 목록이 비어있는지 확인
+                .filter(auctions -> !auctions.isEmpty()) // 비어있거나 null이면 예외 투척
+                .orElseThrow(() -> new ServiceException("404", "경매 목록 조회 실패"))
+                .stream()//AuctionAdminResponse 변환
+                .map(AuctionAdminResponse::from)//변환완료된 AuctionAdminResponse 객체들을 리스트로 수집하여 반환
                 .collect(Collectors.toList());
     }
 

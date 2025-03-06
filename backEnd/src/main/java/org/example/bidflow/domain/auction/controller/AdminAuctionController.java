@@ -2,15 +2,15 @@ package org.example.bidflow.domain.auction.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.example.bidflow.domain.auction.dto.AuctionAdminResponse;
 import org.example.bidflow.domain.auction.dto.AuctionCreateResponse;
 import org.example.bidflow.domain.auction.dto.AuctionRequest;
 import org.example.bidflow.domain.auction.service.AuctionService;
 import org.example.bidflow.global.dto.RsData;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/admin/auctions")
@@ -23,5 +23,13 @@ public class AdminAuctionController {
     public ResponseEntity<RsData<AuctionCreateResponse>> createAuction(@Valid @RequestBody AuctionRequest requestDto) {
         RsData<AuctionCreateResponse> response = auctionService.createAuction(requestDto);
         return ResponseEntity.status(response.getStatusCode()).body(response);
+    }
+
+    @GetMapping
+    public ResponseEntity<RsData<List<AuctionAdminResponse>>> getAllAuctions() {
+        // AuctionService에서 AuctionResponse 리스트를 반환
+        List<AuctionAdminResponse> response = auctionService.getAdminAllAuctions();
+        RsData<List<AuctionAdminResponse>> rsData = new RsData<>("200", "전체 조회가 완료되었습니다.", response);
+        return ResponseEntity.ok(rsData);
     }
 }
