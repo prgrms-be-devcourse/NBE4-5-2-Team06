@@ -28,23 +28,16 @@ public class AuctionService {
     private final BidRepository bidRepository;
     private final ProductRepository productRepository;
 
+    // 모든 경매 목록을 조회하고 AuctionResponse DTO 리스트로 변환
     public List<AuctionCheckResponse> getAllAuctions()  {
-        
-      // 경매 목록 조회
+        // 경매 목록 조회 <AuctionRepository에서 조회>
         List<Auction> auctions = auctionRepository.findAllAuctions();
-
+        if (auctions.isEmpty()) { // 리스트가 비어있을경우 예외처리
+            throw new ServiceException("404", "경매 목록 조회 실패");
+        }
         return auctions.stream()
-                .map(auction -> AuctionCheckResponse.builder()
-                        .auctionId(auction.getAuctionId())
-                        .productName(auction.getProduct().getProductName())  // Product에서 상품명 가져오기
-                        .imageUrl(auction.getProduct().getImageUrl())      // Product에서 이미지 URL 가져오기
-                        .currentPrice(auction.getStartPrice())  // 현재 가격 가져오기
-                        .status(auction.getStatus().toString())  // Enum을 String으로 변환하기
-                        .startTime(auction.getStartTime())
-                        .endTime(auction.getEndTime())
-                        .build())
+                .map(AuctionCheckResponse::from)  // Auction 엔티티를 AuctionResponse DTO로 변환
                 .collect(Collectors.toList());
-
     }
 
     // 경매 등록 서비스
