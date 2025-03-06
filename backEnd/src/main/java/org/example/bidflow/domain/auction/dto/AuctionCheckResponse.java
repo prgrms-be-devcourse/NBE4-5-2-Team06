@@ -1,6 +1,8 @@
 package org.example.bidflow.domain.auction.dto;
 
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import org.example.bidflow.domain.auction.entity.Auction;
 
 import java.time.LocalDateTime;
 
@@ -17,17 +19,19 @@ public class AuctionCheckResponse {
     private LocalDateTime endTime;
 
 
-    //  생성자
-    public static AuctionCheckResponse from(Long auctionId, String productName, String imageUrl, Integer currentPrice,
-                                       String status, LocalDateTime startTime, LocalDateTime endTime) {
-        return AuctionCheckResponse.builder()
-                .auctionId(auctionId)
-                .productName(productName)
-                .imageUrl(imageUrl)
-                .currentPrice(currentPrice)
-                .status(status)
-                .startTime(startTime)
-                .endTime(endTime).build();
+
+       //Entity -> DTO 변환
+        public static AuctionCheckResponse from(Auction auction) {
+            return AuctionCheckResponse.builder()
+                    .auctionId(auction.getAuctionId())
+                    .productName(auction.getProduct().getProductName())  // Product에서 상품명 가져오기
+                    .imageUrl(auction.getProduct().getImageUrl())      // Product에서 이미지 URL 가져오기
+                    .currentPrice(auction.getStartPrice())  // 현재 가격 가져오기
+                    .status(auction.getStatus().toString())  // 경매 상태 Enum을 String으로 변환하기
+                    .startTime(auction.getStartTime())  //경매 시작 시간
+                    .endTime(auction.getEndTime())  //경매 종료 시간
+                    .build();
+        }
+
     }
-}
 
