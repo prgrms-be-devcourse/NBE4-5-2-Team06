@@ -37,12 +37,6 @@ export default function MyPage() {
         전체 상품 목록 조회
       </button>
 
-      <Link href="/admin/auctions">
-        <button className="text-white bg-blue-500 px-4 py-2 rounded">
-          상품 등록
-        </button>
-      </Link>
-
       {/* 로딩 중일 때 불러오는 중 표시 */}
       {loading && <p className="mt-4 text-gray-600">불러오는 중...</p>}
       {/* 에러 발생시 오류 메시지 표시 */}
