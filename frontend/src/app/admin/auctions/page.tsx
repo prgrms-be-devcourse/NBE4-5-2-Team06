@@ -15,7 +15,7 @@ export default function AuctionList() {
     setError("");
 
     try {
-      // 경매 목록을 요청청
+      // 경매 목록을 요청
       const response = await fetch("/api/admin/auctions");
       //응답이 정상적이지 않다면 에러 발생생
       if (!response.ok) throw new Error("경매 목록 조회를 실패했습니다.");

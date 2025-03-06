@@ -43,8 +43,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <header className="flex gap-4">
-          <Link href="/mypage">마이페이지</Link>
-          <Link href="/admin/auctions">관리자페이지</Link>
+          <Link href="/"></Link>
         </header>
         <FontAwesomeIcon icon={faThumbsUp} className="fa-fw" />
         {children}
