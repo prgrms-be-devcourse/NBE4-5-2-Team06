@@ -1,21 +1,20 @@
 package org.example.bidflow.domain.user.controller;
 
+import io.jsonwebtoken.Claims;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.bidflow.domain.user.dto.UserSignInRequest;
 import org.example.bidflow.domain.user.dto.UserSignInResponse;
 import org.example.bidflow.domain.user.dto.UserSignUpRequest;
 import org.example.bidflow.domain.user.dto.UserSignUpResponse;
-import org.example.bidflow.domain.user.entity.User;
 import org.example.bidflow.domain.user.service.UserService;
 import org.example.bidflow.global.dto.RsData;
-import org.example.bidflow.global.exception.ServiceException;
+import org.example.bidflow.global.utils.JwtBlacklistService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
@@ -23,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
     private final UserService userService;
-
+    private final JwtBlacklistService blacklistService;
     // 회원가입
     @PostMapping("/signup")
     public ResponseEntity<RsData<UserSignUpResponse>> signup(@Valid @RequestBody UserSignUpRequest request) {
@@ -48,5 +47,13 @@ public class UserController {
 
         // HTTP 200 OK 응답 반환
         return ResponseEntity.ok(rsData);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(@RequestHeader("Authorization") String token) {
+        token = token.replace("Bearer ", ""); // "Bearer " 제거
+
+        blacklistService.addToBlacklist(token);
+        return ResponseEntity.ok(Map.of("message", "로그아웃이 완료되었습니다."));
     }
 }
