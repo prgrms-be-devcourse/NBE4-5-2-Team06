@@ -6,6 +6,7 @@ spring:
     ansi:
       enabled: always
 
+
   profiles:
     active: dev
 
@@ -49,3 +50,6 @@ logging:
 springdoc:
   default-produces-media-type: application/json;charset=UTF-8
 
+redis:
+  host: localhost
+  port: 6379
