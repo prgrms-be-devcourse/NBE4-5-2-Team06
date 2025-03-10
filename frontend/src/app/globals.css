@@ -2,7 +2,7 @@
 @plugin "tailwindcss-animate";
 
 @custom-variant dark (&:is(.dark *)) {
-  // Dark 모드 변수들
+  /* Dark 모드 변수들 */
 }
 
 @theme inline {

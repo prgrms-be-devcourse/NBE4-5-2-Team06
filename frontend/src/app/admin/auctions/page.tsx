@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { Button } from '@/components/ui/Button';
-import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useState } from "react";
+import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 // 경매 목록을 조회하는 컴포넌트
 export function AuctionList() {
@@ -31,7 +31,9 @@ export function AuctionList() {
 
   return (
     <div className="p-4">
-      <button onClick={fetchAuctions} className="text-black">전체 상품 목록 조회</button>
+      <button onClick={fetchAuctions} className="text-black">
+        전체 상품 목록 조회
+      </button>
       {loading && <p className="mt-4 text-gray-600">불러오는 중...</p>}
       {error && <p className="mt-4 text-red-500">{error}</p>}
       <ul className="mt-4 space-y-2">
@@ -49,7 +51,11 @@ export function AuctionList() {
               </>
             )}
             {auction.imageUrl && (
-              <img src={auction.imageUrl} alt={auction.productName} className="w-32 mt-2" />
+              <img
+                src={auction.imageUrl}
+                alt={auction.productName}
+                className="w-32 mt-2"
+              />
             )}
           </li>
         ))}
@@ -60,32 +66,40 @@ export function AuctionList() {
 
 // 경매 상품 등록하는 페이지
 export default function AdminAuctionCreatePage() {
-  const [productName, setProductName] = useState('');
+  const [productName, setProductName] = useState("");
   const [startPrice, setStartPrice] = useState<number>(0);
   const [minBid, setMinBid] = useState<number>(0);
-  const [startTime, setStartTime] = useState('');
-  const [endTime, setEndTime] = useState('');
-  const [imageUrl, setImageUrl] = useState('');
-  const [description, setDescription] = useState('');
+  const [startTime, setStartTime] = useState("");
+  const [endTime, setEndTime] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
+  const [description, setDescription] = useState("");
 
   const handleSubmit = async () => {
-    const response = await fetch('http://localhost:8080/api/admin/auctions', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ productName, startPrice, minBid, startTime, endTime, imageUrl, description }),
+    const response = await fetch("http://localhost:8080/api/admin/auctions", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        productName,
+        startPrice,
+        minBid,
+        startTime,
+        endTime,
+        imageUrl,
+        description,
+      }),
     });
 
     const data = await response.json();
 
     if (response.ok) {
-      alert('경매가 성공적으로 등록되었습니다!');
-      setProductName('');
+      alert("경매가 성공적으로 등록되었습니다!");
+      setProductName("");
       setStartPrice(0);
       setMinBid(0);
-      setStartTime('');
-      setEndTime('');
-      setImageUrl('');
-      setDescription('');
+      setStartTime("");
+      setEndTime("");
+      setImageUrl("");
+      setDescription("");
     } else {
       alert(`경매 등록 실패: ${data.msg}`);
     }
