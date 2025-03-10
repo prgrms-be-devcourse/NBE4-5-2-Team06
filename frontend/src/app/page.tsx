@@ -17,7 +17,7 @@ export default function MyPage() {
 
     try {
       //API 호출
-      const response = await fetch("/api/admin/auctions");
+      const response = await fetch("/api/auctions");
       //응답이 정상적이지 않다면 에러가 발생
       if (!response.ok) throw new Error("경매 목록 조회를 실패했습니다.");
 
