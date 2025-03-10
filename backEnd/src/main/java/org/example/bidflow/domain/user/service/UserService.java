@@ -1,5 +1,6 @@
 package org.example.bidflow.domain.user.service;
 
+import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.example.bidflow.data.Role;
 import org.example.bidflow.domain.user.dto.UserSignInRequest;
@@ -26,7 +27,6 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
-
 
     public UserSignUpResponse signup(UserSignUpRequest request) {
 
@@ -85,4 +85,5 @@ public class UserService {
         // 응답 객체 생성 및 반환
         return UserSignInResponse.from(user, token);
     }
+
 }
