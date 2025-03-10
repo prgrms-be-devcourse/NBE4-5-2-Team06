@@ -19,6 +19,8 @@ export function Header() {
           <Link href="/mypage">
             <Button variant="outline">마이페이지</Button>
           </Link>
+          <Button variant="outline">로그아웃</Button>
+
         </nav>
       </div>
     </header>
