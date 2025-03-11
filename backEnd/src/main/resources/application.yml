@@ -1,13 +1,16 @@
 server:
-  port: 8080
+  port: 7002
 
 spring:
   output:
     ansi:
       enabled: always
   redis:
-    host: localhost
-    port: 6379
+    data:
+      host: localhost
+      port: 6379
+      password: "pk2258"
+      timeout: 5m
 
 
   profiles:
@@ -52,7 +55,3 @@ logging:
 
 springdoc:
   default-produces-media-type: application/json;charset=UTF-8
-
-redis:
-  host: localhost
-  port: 6379
