@@ -1,5 +1,7 @@
 package org.example.bidflow.global.app;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -147,6 +149,38 @@ public class RedisCommon {
         }
 
         return null;
+    }
+
+    // explain: Redis에 복수개의 데이터를 한 번에 저장
+    public <T> void putAllInHash(String key, Map<String, T> entries) {
+        Map<Object, Object> mappedEntries = new HashMap<>();
+
+        // Map의 각 항목을 Object 타입으로 변환
+        for (Map.Entry<String, T> entry : entries.entrySet()) {
+            mappedEntries.put(entry.getKey(), entry.getValue());
+        }
+
+        // Redis에 한 번에 저장
+        template.opsForHash().putAll(key, mappedEntries);
+    }
+
+    public <T> T getHashAsObject(String key, Class<T> clazz) {
+        Map<Object, Object> entries = template.opsForHash().entries(key);
+
+        if (entries == null || entries.isEmpty()) {
+            return null;
+        }
+
+        // ObjectMapper를 사용하여 Map을 객체로 변환
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.convertValue(entries, clazz);
+    }
+
+    public <T> void putObjectAsHash(String key, T object) {
+        ObjectMapper mapper = new ObjectMapper();
+        Map<String, Object> map = mapper.convertValue(object, new TypeReference<Map<String, Object>>() {});
+
+        template.opsForHash().putAll(key, map);
     }
 
     // explain: Redis Hash에서 특정 필드를 삭제.
