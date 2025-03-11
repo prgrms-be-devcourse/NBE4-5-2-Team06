@@ -27,6 +27,7 @@ public class AuctionController {
         return ResponseEntity.ok(rsData);
     }
 
+
     @PostMapping("/{auctionId}/close")
     public ResponseEntity<RsData<WinnerResponseDto>> closeAuction(@PathVariable Long auctionId) {
         WinnerResponseDto winner = auctionService.closeAuction(auctionId);
@@ -42,5 +43,4 @@ public class AuctionController {
         RsData<AuctionDetailResponse> rsData = new RsData<>("200", "경매가 성공적으로 조회되었습니다.", response);
         return ResponseEntity.ok(rsData);
     }
-
 }

@@ -9,6 +9,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -211,4 +212,13 @@ public class RedisCommon {
 
         return new ValueWithTTL<T>(value, ttl);                              // 값과 TTL을 담은 객체 반환
     }*/
+
+    public void setExpireAt(String key, LocalDateTime expireTime) {
+        LocalDateTime now = LocalDateTime.now();
+        long secondsUntilExpire = Duration.between(now, expireTime).getSeconds();
+
+        if (secondsUntilExpire > 0) {
+            template.expire(key, secondsUntilExpire, TimeUnit.SECONDS);
+        }
+    }
 }

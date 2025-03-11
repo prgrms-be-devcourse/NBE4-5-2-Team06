@@ -138,6 +138,7 @@ public class AuctionService {
 
     // 경매 조회 및 상태 검증 메서드
     public Auction getAuctionWithValidation(Long auctionId) {
+
         // 경매 조회
         Auction auction = auctionRepository.findByAuctionId(auctionId)
                 .orElseThrow(() -> new ServiceException("400-1", "경매가 존재하지 않습니다."));
@@ -149,7 +150,5 @@ public class AuctionService {
 
         return auction;
     }
-
-
 
 }

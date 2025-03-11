@@ -3,23 +3,20 @@ package org.example.bidflow.domain.bid.service;
 import lombok.RequiredArgsConstructor;
 import org.example.bidflow.domain.auction.dto.AuctionBidRequest;
 import org.example.bidflow.domain.auction.entity.Auction;
-import org.example.bidflow.domain.auction.repository.AuctionRepository;
 import org.example.bidflow.domain.auction.service.AuctionService;
 import org.example.bidflow.domain.bid.dto.model.response.BidCreateResponse;
-import org.example.bidflow.domain.bid.dto.model.response.BidInfo;
 import org.example.bidflow.domain.bid.entity.Bid;
 import org.example.bidflow.domain.bid.repository.BidRepository;
 import org.example.bidflow.domain.user.entity.User;
 import org.example.bidflow.domain.user.service.UserService;
 import org.example.bidflow.global.app.RedisCommon;
 import org.example.bidflow.global.exception.ServiceException;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Time;
 import java.time.LocalDateTime;
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -29,31 +26,20 @@ public class BidService {
     private final UserService userService;
     private final BidRepository bidRepository;
     private final RedisCommon redisCommon;
-    private final RedisTemplate redisTemplate;
-    private final AuctionRepository auctionRepository;
 
-    @Transactional
+    /*@Transactional
     public BidCreateResponse createBid(Long auctionId, AuctionBidRequest request) {
 
         String key = "auction:" + auctionId;
-
-        // 1. Redis에 데이터가 없으면 예외 발생
-        // 수정전1: BidStringModel bidModel = redisCommon.getData(key, BidStringModel.class);
 
         // 사용자 검증
         User user = userService.getUserByUuid(request.getUserUuid());
 
         // 경매 상태 검증 🚩
         Auction auction = auctionService.getAuctionWithValidation(auctionId);
-
-        // Integer currentHighestBid = redisCommon.getFromHash(key, "amount", Integer.class); // 수정2
         BidInfo currentBid = redisCommon.getHashAsObject(key, BidInfo.class);
 
         if (currentBid == null) { // 🚩
-            /*redisCommon.putInHash(key, "amount", request.getAmount());
-            redisCommon.putInHash(key,"userUuid",request.getUserUuid());*/
-            /*redisCommon.putAllInHash(key, Map.of("amount", request.getAmount(), "userUuid", request.getUserUuid()));
-            currentHighestBid = request.getAmount();*/
 
             BidInfo newBid =  BidInfo.builder()
                     .amount(request.getAmount())
@@ -63,17 +49,9 @@ public class BidService {
             redisCommon.putObjectAsHash(key, newBid);
             currentBid = newBid;
 
-            // 수정3
-            /*// 2. Redis에 저장, UserUUid, Amount ,TTL
-            redisCommon.putInHash(key,"amount",request.getAmount());
-            redisCommon.putInHash(key,"userUuid",request.getUserUuid());
-//            redisCommon.expire(key, 60); // 60초*/
         }
 
-        // 최고가를 가져옴
-//        수정:4 Integer amount = redisCommon.getFromHash(key, "amount", Integer.class);
-
-        if(request.getAmount() <= currentBid.getAmount() /*amount*/) {
+        if(request.getAmount() <= currentBid.getAmount() *//*amount*//*) {
             throw new ServiceException(HttpStatus.BAD_REQUEST.toString(), "입찰 금액이 현재 최고가보다 낮습니다.");
         }
 
@@ -82,9 +60,6 @@ public class BidService {
             throw new ServiceException(HttpStatus.BAD_REQUEST.toString(),
                     "입찰 금액이 최소 입찰 단위보다 작습니다. 최소 " + (currentBid.getAmount() + auction.getMinBid()) + "원 이상 입찰해야 합니다.");
         }
-
-        /*redisCommon.putInHash(key, "amount", request.getAmount());
-        redisCommon.putInHash(key, "userUuid", request.getUserUuid());*/
         redisCommon.putAllInHash(key, Map.of("amount", request.getAmount(), "userUuid", request.getUserUuid()));
 
         // 입찰 처리 (새로 생성하거나 금액 갱신)
@@ -95,5 +70,58 @@ public class BidService {
 
         // BidDto 변환 후 반환
         return BidCreateResponse.from(bid);
+    }*/
+    @Transactional
+    public BidCreateResponse createBid(Long auctionId, AuctionBidRequest request) {
+        String hashKey = "auction:" + auctionId;
+
+        // 사용자 및 경매 검증
+        User user = userService.getUserByUuid(request.getUserUuid());
+        Auction auction = auctionService.getAuctionWithValidation(auctionId);
+
+        // Redis에서 현재 최고가 조회
+        Integer amount = redisCommon.getFromHash(hashKey, "amount", Integer.class);
+
+        // 최소 입찰 단위 검증
+        if (request.getAmount() < amount + auction.getMinBid()) {
+            throw new ServiceException(HttpStatus.BAD_REQUEST.toString(),
+                    "입찰 금액이 최소 입찰 단위보다 작습니다. 최소 " + (amount + auction.getMinBid()) + "원 이상 입찰해야 합니다.");
+        }
+
+        // 업커밍 -> 온고잉
+        // 데이터 start -> redis
+        // 스케줄링(upcoming -> ongoing) : TTL + amount(startPrice(DB) -> Redis in-memory) + 상태변화(upcoming -> ongoing)
+        // 첫 입찰이라면
+        if (amount == null) {
+            redisCommon.putInHash(hashKey, "amount", request.getAmount());
+            // 업커밍 -> 온고잉
+            // 데이터 start -> redis
+            // 스케줄링(upcoming -> ongoing) : TTL + amount(startPrice(DB) -> Redis in-memory) + 상태변화(upcoming -> ongoing)
+            redisCommon.putInHash(hashKey, "userUuid", request.getUserUuid());
+            redisCommon.setExpireAt(hashKey, auction.getEndTime());
+
+        } else if (request.getAmount() <= amount) {
+            throw new ServiceException(HttpStatus.BAD_REQUEST.toString(), "입찰 금액이 현재 최고가보다 낮습니다.");
+        } else {
+            // 최고가 갱신
+            redisCommon.putInHash(hashKey, "amount", request.getAmount());
+            redisCommon.putInHash(hashKey, "userUuid", request.getUserUuid());
+        }
+
+        /*//redisCommon.setExpire(hashKey, ttl.ofSeconds(secondsUntilExpire) );
+        redisCommon.setExpireAt(hashKey, auction.getEndTime());
+
+        // 최고가 갱신
+        redisCommon.putInHash(hashKey, "amount", request.getAmount());
+        redisCommon.putInHash(hashKey, "userUuid", request.getUserUuid());*/
+
+        // DB 저장 (낙찰용 로그로 남김)
+        Bid bid = Bid.createBid(auction, user, request.getAmount(), LocalDateTime.now());
+        bidRepository.save(bid);
+
+        return BidCreateResponse.from(bid);
     }
+
+    // 0 -> o 105,0000
 }
+
