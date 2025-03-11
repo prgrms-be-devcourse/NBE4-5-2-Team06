@@ -1,17 +1,21 @@
 server:
   port: 7002
 
+#spring:
+#  output:
+#    ansi:
+#      enabled: always
+#  redis:
+#    data:
+#      host: localhost
+#      port: 6379
+#      password: "pk2258"
 spring:
-  output:
-    ansi:
-      enabled: always
-  redis:
-    data:
+  data:
+    redis:
       host: localhost
       port: 6379
       password: "pk2258"
-      timeout: 5m
-
 
   profiles:
     active: dev

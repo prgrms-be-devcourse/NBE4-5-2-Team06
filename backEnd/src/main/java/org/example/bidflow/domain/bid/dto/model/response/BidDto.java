@@ -1,7 +1,6 @@
-package org.example.bidflow.domain.bid.dto;
+package org.example.bidflow.domain.bid.dto.model.response;
 
 import lombok.*;
-import org.example.bidflow.domain.bid.entity.Bid;
 import org.example.bidflow.domain.user.dto.UserSignUpRequest;
 
 import java.time.LocalDateTime;

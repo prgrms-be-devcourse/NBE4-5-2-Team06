@@ -1,11 +1,7 @@
 package org.example.bidflow.domain.auction.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.example.bidflow.domain.auction.dto.AuctionBidRequest;
 import org.example.bidflow.domain.auction.dto.AuctionCheckResponse;
-import org.example.bidflow.domain.bid.dto.BidCreateResponse;
-import org.example.bidflow.domain.bid.dto.BidDto;
-import org.example.bidflow.domain.bid.service.BidService;
 import org.example.bidflow.domain.winner.dto.WinnerResponseDto;
 import org.example.bidflow.domain.auction.service.AuctionService;
 import org.example.bidflow.global.dto.RsData;
@@ -22,7 +18,6 @@ import java.util.List;
 public class AuctionController {
 
     private final AuctionService auctionService;
-    private final BidService bidService;
 
     @GetMapping
     public ResponseEntity<RsData<List<AuctionCheckResponse>>> getAllAuctions() {
@@ -48,11 +43,4 @@ public class AuctionController {
         return ResponseEntity.ok(rsData);
     }
 
-    // 경매 입찰 컨트롤러
-    @PostMapping("/{auctionId}/bids")
-    public ResponseEntity<RsData<BidCreateResponse>> createBids(@PathVariable Long auctionId, @RequestBody AuctionBidRequest request) {
-        BidCreateResponse response = bidService.createBid(auctionId, request);
-        RsData<BidCreateResponse> rsData = new RsData<>("200", "입찰이 성공적으로 등록돠었습니다.", response);
-        return ResponseEntity.ok(rsData);
-    }
 }
