@@ -1,14 +1,21 @@
 server:
-  port: 8080
+  port: 7002
 
+#spring:
+#  output:
+#    ansi:
+#      enabled: always
+#  redis:
+#    data:
+#      host: localhost
+#      port: 6379
+#      password: "pk2258"
 spring:
-  output:
-    ansi:
-      enabled: always
-  redis:
-    host: localhost
-    port: 6379
-
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password: "pk2258"
 
   profiles:
     active: dev
@@ -52,7 +59,3 @@ logging:
 
 springdoc:
   default-produces-media-type: application/json;charset=UTF-8
-
-redis:
-  host: localhost
-  port: 6379

@@ -5,7 +5,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.example.bidflow.global.utils.JwtBlacklistService;
+import org.example.bidflow.domain.user.service.JwtBlacklistService;
 import org.example.bidflow.global.utils.JwtProvider;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;

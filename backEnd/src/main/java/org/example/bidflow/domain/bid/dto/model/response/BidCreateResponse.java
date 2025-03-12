@@ -1,4 +1,4 @@
-package org.example.bidflow.domain.bid.dto;
+package org.example.bidflow.domain.bid.dto.model.response;
 
 import lombok.Builder;
 import lombok.Getter;
