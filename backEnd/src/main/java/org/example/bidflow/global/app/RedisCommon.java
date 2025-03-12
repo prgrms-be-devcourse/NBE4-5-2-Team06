@@ -40,6 +40,14 @@ public class RedisCommon {
         return gson.fromJson(jsonValue, clazz); // 역질렬화 왜하는 거야? : JSON 형태의 문자열을 객체로 변환하기 위해
     }
 
+    public Set<String> getAllKeys() {
+        return template.keys("*");
+    }
+
+    /*public List<String> getAllKeys() {
+        return new ArrayList<>(template.keys("*"));
+    }*/
+
     // explain: redis 에 데이터 저장하기 - 단일 데이터 저장
     public <T> void setData(String key, T value /*Duration expiredTime: 데이터 만료시간*/) {
         String jsonValue = gson.toJson(value); // 객체를 JSON 형태의 문자열로 변환 = 직렬화
@@ -220,5 +228,26 @@ public class RedisCommon {
         if (secondsUntilExpire > 0) {
             template.expire(key, secondsUntilExpire, TimeUnit.SECONDS);
         }
+    }
+
+    // TTL 반환1
+    public Long getTTL(String key) {
+        return template.getExpire(key, TimeUnit.SECONDS);
+    }
+    // TTL 반환2
+    public Duration getRemainingTTL(String key) {
+        Long seconds = template.getExpire(key, TimeUnit.SECONDS);
+        if (seconds == null || seconds < 0) {
+            return null; // 키가 존재하지 않거나 만료 시간이 설정되지 않은 경우
+        }
+        return Duration.ofSeconds(seconds);
+    }
+    // TTL 반환3
+    public LocalDateTime getExpireTime(String key) {
+        Long seconds = template.getExpire(key, TimeUnit.SECONDS);
+        if (seconds == null || seconds < 0) {
+            return null; // 키가 존재하지 않거나 만료 시간이 설정되지 않은 경우
+        }
+        return LocalDateTime.now().plusSeconds(seconds);
     }
 }

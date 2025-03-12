@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @Repository
 public interface AuctionRepository extends JpaRepository<Auction,Long> {
-  
+
     // 사용자 - 전체 경매 상품 리스트 조회하는 쿼리
     @Query("SELECT a FROM Auction a JOIN FETCH a.product")
     List<Auction> findAllAuctions();
@@ -26,7 +26,7 @@ public interface AuctionRepository extends JpaRepository<Auction,Long> {
     Optional<Auction> findByAuctionId(Long auctionId);
 
 
-
+}
 
 
 

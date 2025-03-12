@@ -74,10 +74,19 @@ public class BidService {
     @Transactional
     public BidCreateResponse createBid(Long auctionId, AuctionBidRequest request) {
         String hashKey = "auction:" + auctionId;
+        LocalDateTime now = LocalDateTime.now();
+        //- 입찰 과정에서 경매 진행중이 아닐 때(시간으로 비교) 예외 처리
+        // 경매 시작 시간 <= 현재 시간 <= 경매 종료 시간
 
         // 사용자 및 경매 검증
         User user = userService.getUserByUuid(request.getUserUuid());
         Auction auction = auctionService.getAuctionWithValidation(auctionId);
+
+        if(now.isBefore(auction.getStartTime())){
+            throw new ServiceException(HttpStatus.BAD_REQUEST.toString(), "경매가 시작 전입니다.");
+        }else if(now.isAfter(auction.getEndTime())){
+            throw new ServiceException(HttpStatus.BAD_REQUEST.toString(), "경매가 종료 되었습니다.");
+        }
 
         // Redis에서 현재 최고가 조회
         Integer amount = redisCommon.getFromHash(hashKey, "amount", Integer.class);

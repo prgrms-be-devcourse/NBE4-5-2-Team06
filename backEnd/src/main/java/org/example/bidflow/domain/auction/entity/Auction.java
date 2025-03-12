@@ -6,6 +6,7 @@ import org.example.bidflow.data.AuctionStatus;
 import org.example.bidflow.domain.bid.entity.Bid;
 import org.example.bidflow.domain.product.entity.Product;
 import org.example.bidflow.domain.winner.entity.Winner;
+import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -50,6 +51,9 @@ public class Auction {
         @OneToMany(mappedBy = "auction", cascade = CascadeType.ALL)
         @Builder.Default
         private List<Bid> bids = new ArrayList<>();
+
+        @CreatedDate
+        private LocalDateTime createdAt;
 
         public void setStatus(AuctionStatus status) {
                 this.status = status;

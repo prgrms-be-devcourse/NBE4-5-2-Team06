@@ -8,6 +8,7 @@ import jakarta.transaction.Transactional;
 import org.example.bidflow.data.AuctionStatus;
 import org.example.bidflow.domain.product.entity.Product;
 import org.example.bidflow.domain.product.repository.ProductRepository;
+import org.example.bidflow.global.app.RedisCommon;
 import org.example.bidflow.global.dto.RsData;
 import org.example.bidflow.domain.winner.dto.WinnerResponseDto;
 import org.example.bidflow.domain.bid.entity.Bid;
@@ -27,6 +28,7 @@ public class AuctionService {
     private final AuctionRepository auctionRepository;
     private final BidRepository bidRepository;
     private final ProductRepository productRepository;
+    private final RedisCommon redisCommon;
 
     // 사용자-모든 경매 목록을 조회하고 AuctionResponse DTO 리스트로 변환
     public List<AuctionCheckResponse> getAllAuctions()  {
@@ -55,7 +57,7 @@ public class AuctionService {
     @Transactional
     public RsData<AuctionCreateResponse> createAuction(AuctionRequest requestDto) {
 
-        // 경매 종료 시간이 시작 시간보다 빠르면 예외 처리
+        /*// 경매 종료 시간이 시작 시간보다 빠르면 예외 처리
         if (requestDto.getStartTime().isAfter(requestDto.getEndTime())) {
             throw new ServiceException("400", "경매 종료 시간이 시작 시간보다 빠를 수 없습니다.");
         }
@@ -64,7 +66,7 @@ public class AuctionService {
         LocalDateTime now = LocalDateTime.now();
         if (requestDto.getStartTime().isBefore(now.plusDays(2))) {
             throw new ServiceException("404", "상품 등록 시간은 최소 2일 전부터 가능합니다.");
-        }
+        }*/
 
         // 상품 정보 저장
         Product product = Product.builder()
@@ -84,6 +86,17 @@ public class AuctionService {
                 .status(AuctionStatus.UPCOMING)
                 .build();
         auctionRepository.save(auction);
+
+        /*
+        Redis(Key-Value): auction:{auctionId} = {amount=?}
+         */
+
+        // 상품 등록이 발생했을 때, 레디스 메모리 상에서 경매 시작가, TTl을 설정
+        String hashKey = "auction:" + auction.getAuctionId();
+        redisCommon.putInHash(hashKey, "amount", auction.getStartPrice()); // 입찰할 때는 amount로 넣고 있음.
+
+        LocalDateTime expireTime = auction.getEndTime().plusMinutes(2);
+        redisCommon.setExpireAt(hashKey, expireTime);
 
         // 성공 응답 반환
         return new RsData<>("201", "경매가 등록되었습니다.", AuctionCreateResponse.from(auction));
@@ -143,10 +156,10 @@ public class AuctionService {
         Auction auction = auctionRepository.findByAuctionId(auctionId)
                 .orElseThrow(() -> new ServiceException("400-1", "경매가 존재하지 않습니다."));
 
-        // 경매 상태 검증
+        /*// 경매 상태 검증
         if (!auction.getStatus().equals(AuctionStatus.ONGOING)) {
             throw new ServiceException("400-2", "진행 중인 경매가 아닙니다.");
-        }
+        }*/
 
         return auction;
     }
