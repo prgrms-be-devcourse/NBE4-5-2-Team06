@@ -87,7 +87,6 @@ public class UserService {
         // JWT 토큰 발행 시 포함할 사용자 정보 설정
         Map<String, Object> claims = new HashMap<>();
         claims.put("userUuid", user.getUserUuid());
-        claims.put("userId", user.getUserId());
         claims.put("nickname", user.getNickname());
         claims.put("role", user.getRole());
 

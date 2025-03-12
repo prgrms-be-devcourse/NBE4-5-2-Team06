@@ -23,9 +23,6 @@ public class User {
     @Column(name = "USER_UUID", nullable = false, length = 50)
     private String userUuid;
 
-    @Column(name ="UserId")
-    private Long userId;
-
     @Column(name = "EMAIL", nullable = false, unique = true)
     private String email;
 
