@@ -59,4 +59,11 @@ public class UserController {
     RsData<UserCheckRequest> rsData = new RsData<>("200" , "사용자 조회가 완료되었습니다.", userCheck);
     return ResponseEntity.ok(rsData);
     }
+
+    @PutMapping("/user/{userId}")
+    public ResponseEntity<RsData<UserPutRequest>> putUser(@PathVariable("userId") String userId){
+        UserPutRequest userPut = userService.putUser(userId);
+        RsData<UserPutRequest> rsData = new RsData<>("200", "사용자 정보 수정이 완료되었습니다.", userPut);
+        return ResponseEntity.ok(rsData);
+    }
 }

@@ -97,4 +97,9 @@ public class UserService {
         return UserSignInResponse.from(user, token);
     }
 
+    public UserPutRequest putUser(String userId) {
+        User user = getUserByUuid(userId); //userUuid로 조회
+        return UserPutRequest.from(user); //DTO로 반환한다
+    }
 }
+
