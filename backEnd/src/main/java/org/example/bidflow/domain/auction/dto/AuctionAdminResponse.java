@@ -33,13 +33,17 @@ public class AuctionAdminResponse {
                 .startTime(auction.getStartTime())   // 시작 시간
                 .endTime(auction.getEndTime());      // 종료 시간
 
-            //경매가 종료된 경우
-        if ("FINISHED".equals(auction.getStatus().toString())) {
+            // 경매가 종료된 경우
+        if ("FINISHED".equals(auction.getStatus().toString())){
             // 낙찰자 정보 추가
             builder.nickname(auction.getWinner().getUser().getNickname()) // 경매 종료 시 낙찰자 닉네임
                     .winningBid(auction.getWinner().getWinningBid())  // 경매 종료 시 낙찰가
                     .winTime(auction.getWinner().getWinTime());      // 경매 종료 시 낙찰 시간
         }
+
+        // 프론트 단에서 피니쉬로 바뀌었을 때(메인 페이지를 접속할 때) end포인트로 요청을 보내서 auction의 status를 finish로 바꾸자
+        // 관리자 페이지에 있는 관리자가 있다고 가정
+        // 13시 - 종료시간 13시1~2분에
 
         return builder.build();
     }

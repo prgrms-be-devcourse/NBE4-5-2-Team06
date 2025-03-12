@@ -32,6 +32,9 @@ public class AuctionScheduler {
         // 레디스에서 전체 키를 가져오는 메서드
         Set<String> keys = redisCommon.getAllKeys();
 
+        if(keys.isEmpty()) {
+            throw new ServiceException("400", "진행중인 경매가 없습니다.");
+        }
 
         for (String key : keys) {
             String id = key.split(":")[1];
@@ -41,6 +44,11 @@ public class AuctionScheduler {
             if (ttl - 60 < 0) {
                 Integer amount = redisCommon.getFromHash(key, "amount", Integer.class);
                 String userUuid = redisCommon.getFromHash(key, "userUuid", String.class);
+
+                if (userUuid != null) {
+                    throw new ServiceException("400", "사용자가 일정시간 입찰을 하지않아 입찰 내역이 존재하지 않습니다.(사용자 참가X)");
+                }
+
                 Optional<Auction> auction = auctionRepository.findByAuctionId(auctionId);
                 LocalDateTime endTime = auction.get().getEndTime();
                 User user = userRepository.findByUserUuid(userUuid).get();

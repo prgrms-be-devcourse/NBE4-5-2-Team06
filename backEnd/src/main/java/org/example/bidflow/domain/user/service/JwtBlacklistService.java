@@ -1,8 +1,9 @@
-package org.example.bidflow.global.utils;
+package org.example.bidflow.domain.user.service;
 
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.example.bidflow.global.exception.ServiceException;
+import org.example.bidflow.global.utils.JwtProvider;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;

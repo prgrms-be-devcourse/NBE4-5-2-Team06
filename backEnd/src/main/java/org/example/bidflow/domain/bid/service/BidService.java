@@ -100,16 +100,8 @@ public class BidService {
         // 업커밍 -> 온고잉
         // 데이터 start -> redis
         // 스케줄링(upcoming -> ongoing) : TTL + amount(startPrice(DB) -> Redis in-memory) + 상태변화(upcoming -> ongoing)
-        // 첫 입찰이라면
-        if (amount == null) {
-            redisCommon.putInHash(hashKey, "amount", request.getAmount());
-            // 업커밍 -> 온고잉
-            // 데이터 start -> redis
-            // 스케줄링(upcoming -> ongoing) : TTL + amount(startPrice(DB) -> Redis in-memory) + 상태변화(upcoming -> ongoing)
-            redisCommon.putInHash(hashKey, "userUuid", request.getUserUuid());
-            redisCommon.setExpireAt(hashKey, auction.getEndTime());
 
-        } else if (request.getAmount() <= amount) {
+        if (request.getAmount() <= amount) {
             throw new ServiceException(HttpStatus.BAD_REQUEST.toString(), "입찰 금액이 현재 최고가보다 낮습니다.");
         } else {
             // 최고가 갱신

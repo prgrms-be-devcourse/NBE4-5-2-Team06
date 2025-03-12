@@ -21,11 +21,7 @@ public interface AuctionRepository extends JpaRepository<Auction,Long> {
     @Query("SELECT a FROM Auction a JOIN FETCH a.product LEFT JOIN FETCH a.winner")
     List<Auction> findAllAuctionsWithProductAndWinner();
 
-    Optional<Auction> findByAuctionIdAndStatus(Long auctionId, AuctionStatus status);
-
     Optional<Auction> findByAuctionId(Long auctionId);
-
-
 }
 
 

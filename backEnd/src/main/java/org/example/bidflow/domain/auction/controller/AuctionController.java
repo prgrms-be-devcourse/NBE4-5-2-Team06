@@ -2,13 +2,11 @@ package org.example.bidflow.domain.auction.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.example.bidflow.domain.auction.dto.AuctionCheckResponse;
-import org.example.bidflow.domain.winner.dto.WinnerResponseDto;
+import org.example.bidflow.domain.auction.dto.AuctionDetailResponse;
 import org.example.bidflow.domain.auction.service.AuctionService;
 import org.example.bidflow.global.dto.RsData;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.example.bidflow.domain.auction.dto.AuctionDetailResponse;
 
 import java.util.List;
 
@@ -28,12 +26,13 @@ public class AuctionController {
     }
 
 
+    // Explain: FE 에서 FINISHED 상태로 변경시 요청할 엔드포인트 경로
     @PostMapping("/{auctionId}/close")
-    public ResponseEntity<RsData<WinnerResponseDto>> closeAuction(@PathVariable Long auctionId) {
-        WinnerResponseDto winner = auctionService.closeAuction(auctionId);
+    public /*ResponseEntity<RsData<WinnerResponseDto>>*/void  closeAuction(@PathVariable Long auctionId) {
+        auctionService.closeAuction(auctionId);
 
-        RsData<WinnerResponseDto> response = new RsData<>("200-SUCCESS", "경매가 성공적으로 종료되었습니다.", winner);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+       /* RsData<WinnerResponseDto> response = new RsData<>("200-SUCCESS", "경매가 성공적으로 종료되었습니다.", winner);
+        return ResponseEntity.status(HttpStatus.OK).body(response);*/
     }
 
     // 특정 경매 상세 조회 컨트롤러
