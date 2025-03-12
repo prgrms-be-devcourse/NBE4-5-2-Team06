@@ -1,5 +1,5 @@
 server:
-  port: 7002
+  port: 8080
 
 #spring:
 #  output:
@@ -15,7 +15,7 @@ spring:
     redis:
       host: localhost
       port: 6379
-      password: "pk2258"
+      password: ""
 
   profiles:
     active: dev

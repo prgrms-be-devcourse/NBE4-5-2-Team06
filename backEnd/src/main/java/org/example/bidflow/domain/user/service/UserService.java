@@ -1,12 +1,8 @@
 package org.example.bidflow.domain.user.service;
 
-import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.example.bidflow.data.Role;
-import org.example.bidflow.domain.user.dto.UserSignInRequest;
-import org.example.bidflow.domain.user.dto.UserSignInResponse;
-import org.example.bidflow.domain.user.dto.UserSignUpRequest;
-import org.example.bidflow.domain.user.dto.UserSignUpResponse;
+import org.example.bidflow.domain.user.dto.*;
 import org.example.bidflow.domain.user.entity.User;
 import org.example.bidflow.domain.user.repository.UserRepository;
 import org.example.bidflow.global.exception.ServiceException;
@@ -27,6 +23,21 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
+
+
+    public  UserCheckRequest getUserCheck(String userId) {
+        User user = getUserByUuid(userId); //userUuid로 조회
+        return UserCheckRequest.from(user); //DTO로 반환한다
+    }
+//    public User getUserUserId(Long auctionId) {
+//
+//        // 경매 조회
+//        User user = userRepository.findByUserId(auctionId)
+//                .orElseThrow(() -> new ServiceException("400-1", "사용자가 존재 하지 않습니다."));
+//
+//        return user;
+//    }
+
 
     public UserSignUpResponse signup(UserSignUpRequest request) {
 
@@ -76,6 +87,7 @@ public class UserService {
         // JWT 토큰 발행 시 포함할 사용자 정보 설정
         Map<String, Object> claims = new HashMap<>();
         claims.put("userUuid", user.getUserUuid());
+        claims.put("userId", user.getUserId());
         claims.put("nickname", user.getNickname());
         claims.put("role", user.getRole());
 

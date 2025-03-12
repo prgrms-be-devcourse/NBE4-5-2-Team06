@@ -23,6 +23,9 @@ public class User {
     @Column(name = "USER_UUID", nullable = false, length = 50)
     private String userUuid;
 
+    @Column(name ="UserId")
+    private Long userId;
+
     @Column(name = "EMAIL", nullable = false, unique = true)
     private String email;
 
@@ -31,6 +34,9 @@ public class User {
 
     @Column(name = "PASSWORD", nullable = false)
     private String password;
+
+    @Column(name = "profileImage")
+    private String profileImage;
 
     @Builder.Default
     @Column(name = "CREATED_DATE")
