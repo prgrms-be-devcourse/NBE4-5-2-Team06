@@ -3,12 +3,14 @@ package org.example.bidflow.domain.auction.service;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.example.bidflow.data.AuctionStatus;
+import org.example.bidflow.data.Role;
 import org.example.bidflow.domain.auction.dto.*;
 import org.example.bidflow.domain.auction.entity.Auction;
 import org.example.bidflow.domain.auction.repository.AuctionRepository;
 import org.example.bidflow.domain.bid.repository.BidRepository;
 import org.example.bidflow.domain.product.entity.Product;
 import org.example.bidflow.domain.product.repository.ProductRepository;
+import org.example.bidflow.global.annotation.HasRole;
 import org.example.bidflow.global.app.RedisCommon;
 import org.example.bidflow.global.dto.RsData;
 import org.example.bidflow.global.exception.ServiceException;
@@ -47,7 +49,8 @@ public class AuctionService {
                 .collect(Collectors.toList());
     }
 
-    //관리자- 모든 경매 목록을 조회
+    //관리자- 모든 경매 목록을 조회 (관리자)
+    @HasRole(Role.ADMIN)
     public List<AuctionAdminResponse> getAdminAllAuctions() {
         //경매 목록과 관련된 상품 및 낙찰자 정보를 함께 가져옴
         return Optional.ofNullable(auctionRepository.findAllAuctionsWithProductAndWinner())//경매 목록이 비어있는지 확인
@@ -58,7 +61,8 @@ public class AuctionService {
                 .collect(Collectors.toList());
     }
 
-    // 경매 등록 서비스
+    // 경매 등록 서비스 (관리자)
+    @HasRole(Role.ADMIN)
     @Transactional
     public RsData<AuctionCreateResponse> createAuction(AuctionRequest requestDto) {
 
@@ -107,7 +111,7 @@ public class AuctionService {
         return new RsData<>("201", "경매가 등록되었습니다.", AuctionCreateResponse.from(auction));
     }
 
-    // 외부 요청에 대한 거래 종료 기능
+    // 외부 요청에 대한 거래 종료 기능 (보류)
     @Transactional
     public void closeAuction(Long auctionId) {
         Auction auction = auctionRepository.findByAuctionId(auctionId)

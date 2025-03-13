@@ -8,10 +8,15 @@ import lombok.RequiredArgsConstructor;
 import org.example.bidflow.domain.user.service.JwtBlacklistService;
 import org.example.bidflow.global.utils.JwtProvider;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -36,8 +41,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 return; // 차단된 토큰이므로 요청 중단
             }
 
-            // 블랙리스트에 없는 경우에만 JWT 검증 진행
-            jwtProvider.validateToken(token);
+            if(jwtProvider.validateToken(token)) {
+                String userUUID = jwtProvider.parseUserUUID(token);
+                String role = jwtProvider.parseRole(token);
+
+                List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_" + role));
+
+                UsernamePasswordAuthenticationToken authentication =
+                        new UsernamePasswordAuthenticationToken(userUUID, null, authorities);
+
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
+
         }
 
         chain.doFilter(request, response);  // 필터가 끝난 후 다음 필터나 서블릿으로 요청을 넘김
