@@ -25,6 +25,7 @@ public class AdminAuctionController {
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
+    // 전체 경매 상품 리스트 조회 컨트롤러
     @GetMapping
     public ResponseEntity<RsData<List<AuctionAdminResponse>>> getAllAuctions() {
         // AuctionService에서 AuctionResponse 리스트를 반환

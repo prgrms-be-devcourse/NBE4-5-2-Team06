@@ -16,6 +16,7 @@ public class BidCreateResponse {
     private final String  title;
     private final Integer bidAmount;
     private final LocalDateTime bidTime;
+    private final String nickname;
 
     // Bid 엔터티에서 BidDto로 변환
     public static BidCreateResponse from(Bid bid) {
@@ -26,6 +27,7 @@ public class BidCreateResponse {
                 .title(auction.getProduct().getProductName())
                 .bidAmount(bid.getAmount())
                 .bidTime(bid.getBidTime())
+                .nickname(bid.getUser().getNickname())
                 .build();
     }
 }

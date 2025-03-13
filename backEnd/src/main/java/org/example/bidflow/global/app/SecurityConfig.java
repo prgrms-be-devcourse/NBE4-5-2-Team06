@@ -11,7 +11,6 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
-
 public class SecurityConfig {
 
     // BCrypt 해시 함수를 사용하여 비밀번호를 암호화하는 빈 등록
