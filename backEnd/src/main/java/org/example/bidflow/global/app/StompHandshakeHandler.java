@@ -32,10 +32,10 @@ public class StompHandshakeHandler implements HandshakeInterceptor {
         String token = extractToken(httpRequest);
 
         // WebSocket 세션 속성 저장
-        attributes.put("userUuid", jwtProvider.parseUserUuid(token));
+        attributes.put("userUUID", jwtProvider.parseUserUUID(token));
         attributes.put("nickname", jwtProvider.parseNickname(token));
 
-        log.info("WebSocket Handshake 성공: userUUID={}, nickname={}", jwtProvider.parseUserUuid(token), jwtProvider.parseNickname(token));
+        log.info("WebSocket Handshake 성공: userUUID={}, nickname={}", jwtProvider.parseUserUUID(token), jwtProvider.parseNickname(token));
         return true;
     }
 

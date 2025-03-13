@@ -25,8 +25,8 @@ public class UserService {
     private final JwtProvider jwtProvider;
 
 
-    public  UserCheckRequest getUserCheck(String userId) {
-        User user = getUserByUuid(userId); //userUuid로 조회
+    public  UserCheckRequest getUserCheck(String userUUID) {
+        User user = getUserByUUID(userUUID); //userUUID로 조회
         return UserCheckRequest.from(user); //DTO로 반환한다
     }
 //    public User getUserUserId(Long auctionId) {
@@ -54,7 +54,7 @@ public class UserService {
 
         // User 엔티티 생성
         User user = User.builder()
-                .userUuid(System.currentTimeMillis() + "-" + UUID.randomUUID())
+                .userUUID(System.currentTimeMillis() + "-" + UUID.randomUUID())
                 .email(request.getEmail())
                 .password(encodedPassword)
                 .nickname(request.getNickname())
@@ -68,8 +68,8 @@ public class UserService {
     }
 
     // UUID를 기반으로 유저 검증
-    public User getUserByUuid(String uuid) {
-        return userRepository.findByUserUuid(uuid)
+    public User getUserByUUID(String userUUID) {
+        return userRepository.findByUserUUID(userUUID)
                 .orElseThrow(() -> new ServiceException("400", "사용자가 존재하지 않습니다."));
     }
 
@@ -86,7 +86,7 @@ public class UserService {
 
         // JWT 토큰 발행 시 포함할 사용자 정보 설정
         Map<String, Object> claims = new HashMap<>();
-        claims.put("userUuid", user.getUserUuid());
+        claims.put("userUUID", user.getUserUUID());
         claims.put("nickname", user.getNickname());
         claims.put("role", user.getRole());
 

@@ -20,8 +20,8 @@ public class WinnerController {
 
     // 낙찰 내역 조회 컨트롤러
     @GetMapping("/{userUUID}/winner")
-    public ResponseEntity<RsData<List<WinnerCheckResponse>>> getWinnerList(@PathVariable("userUUID") String userUuid) {
-        RsData<List<WinnerCheckResponse>> response = winnerService.getWinnerList(userUuid);
+    public ResponseEntity<RsData<List<WinnerCheckResponse>>> getWinnerList(@PathVariable("userUUID") String userUUID) {
+        RsData<List<WinnerCheckResponse>> response = winnerService.getWinnerList(userUUID);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 }

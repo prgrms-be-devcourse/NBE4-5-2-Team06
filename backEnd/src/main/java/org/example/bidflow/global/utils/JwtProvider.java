@@ -39,9 +39,9 @@ public class JwtProvider {
                 .getPayload(); // JWT에서 payload (실제 데이터)를 반환
     }
 
-    // userUuid 직접 반환
-    public String parseUserUuid(String token) {
-        return parseClaims(token).get("userUuid", String.class); // 자동으로 userUuid 파싱
+    // userUUID 직접 반환
+    public String parseUserUUID(String token) {
+        return parseClaims(token).get("userUUID", String.class); // 자동으로 userUUID 파싱
     }
 
     // nickname 직접 반환
