@@ -28,6 +28,7 @@ public class JwtProvider {
                 .compact(); // 최종적으로 문자열로 변환하여 반환
     }
 
+    // JWT 파싱
     public Claims parseClaims(String token) {
 
         // Jwts.parser()를 사용하여 JWT 파싱
@@ -38,15 +39,27 @@ public class JwtProvider {
                 .getPayload(); // JWT에서 payload (실제 데이터)를 반환
     }
 
+    // userUUID 직접 반환
+    public String parseUserUUID(String token) {
+        return parseClaims(token).get("userUUID", String.class); // 자동으로 userUUID 파싱
+    }
+
+    // nickname 직접 반환
+    public String parseNickname(String token) {
+        return parseClaims(token).get("nickname", String.class); // 자동으로 nickname 파싱
+    }
+
+
+    // 토큰 유효성 검증
     public boolean validateToken(String token) {
         try {
             // JWT의 유효성을 검증하는 메서드
-            // Jwts.parser()로 토큰 파싱 및 서명 검증을 진행
+            // Jwts.parser()로 토큰 파싱 및 서명 검증을 진행`
             // secretKey로 JWT 서명을 검증하여 유효한 토큰인지 확인
             Jwts.parser()
                     .verifyWith(secretKey) // SecretKey 검증
                     .build() // 빌드하여 실제 파서 객체 생성
-                    .parseSignedClaims(token); // JWT 파싱 및 서명 검증
+                    .parseSignedClaims(token); // JWT 파싱 및 서명 검증`
 
             return true; // 검증 성공 (유효한 토큰)
         } catch (JwtException | IllegalArgumentException e) {
@@ -54,5 +67,4 @@ public class JwtProvider {
             return false; // 검증 실패 (잘못된 토큰)
         }
     }
-
 }

@@ -8,11 +8,11 @@ import org.example.bidflow.domain.user.entity.User;
 @Builder
 public class UserSignUpResponse {
 
-    private final String userUuid;
+    private final String userUUID;
 
     public static UserSignUpResponse from(User user) {
         return UserSignUpResponse.builder()
-                .userUuid(user.getUserUuid())
+                .userUUID(user.getUserUUID())
                 .build();
     }
 }

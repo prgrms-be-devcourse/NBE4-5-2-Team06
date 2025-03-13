@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Getter
 public class UserCheckRequest {
 
-    private final String userid;
+    private final String userUUID;
     private final String nickname;
     private final String email;
     private final LocalDateTime createdAt;
@@ -18,7 +18,7 @@ public class UserCheckRequest {
 
     public static UserCheckRequest from(User user) {
         return UserCheckRequest.builder()
-                .userid(user.getUserUuid())
+                .userUUID(user.getUserUUID())
                 .nickname(user.getNickname())
                 .email(user.getEmail())
                 .createdAt(user.getCreatedDate())

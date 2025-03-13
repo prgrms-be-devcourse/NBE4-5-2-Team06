@@ -13,7 +13,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -43,15 +42,15 @@ public class AuctionScheduler {
             // ttl - 여유시간(2분)
             if (ttl - 60 < 0) {
                 Integer amount = redisCommon.getFromHash(key, "amount", Integer.class);
-                String userUuid = redisCommon.getFromHash(key, "userUuid", String.class);
+                String userUUID = redisCommon.getFromHash(key, "userUUID", String.class);
 
-                if (userUuid != null) {
+                if (userUUID != null) {
                     throw new ServiceException("400", "사용자가 일정시간 입찰을 하지않아 입찰 내역이 존재하지 않습니다.(사용자 참가X)");
                 }
 
                 Optional<Auction> auction = auctionRepository.findByAuctionId(auctionId);
                 LocalDateTime endTime = auction.get().getEndTime();
-                User user = userRepository.findByUserUuid(userUuid).get();
+                User user = userRepository.findByUserUUID(userUUID).get();
 
                 Winner winner = Winner.builder()
                         .winningBid(amount)

@@ -12,20 +12,22 @@ import java.time.LocalDateTime;
 public class BidCreateResponse {
 
     private final Long auctionId;
-    private final String userUuid;
+    private final String userUUID;
     private final String  title;
     private final Integer bidAmount;
     private final LocalDateTime bidTime;
+    private final String nickname;
 
     // Bid 엔터티에서 BidDto로 변환
     public static BidCreateResponse from(Bid bid) {
         Auction auction = bid.getAuction();
         return BidCreateResponse.builder()
                 .auctionId(auction.getAuctionId())
-                .userUuid(bid.getUser().getUserUuid())
+                .userUUID(bid.getUser().getUserUUID())
                 .title(auction.getProduct().getProductName())
                 .bidAmount(bid.getAmount())
                 .bidTime(bid.getBidTime())
+                .nickname(bid.getUser().getNickname())
                 .build();
     }
 }

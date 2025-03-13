@@ -1,133 +1,199 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
+import dayjs from "dayjs";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+  CardFooter,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/Button";
 
-export default function MyPage() {
-  //경매 목록, 로딩 상태, 에러 메시지를 관리하는 상태 변수들
-  const [auctions, setAuctions] = useState<any[]>([]); // 경매 목록을 저장할 상태
-  const [loading, setLoading] = useState(false); // 데이터 로딩 중인지 여부를 관리하는 상태
-  const [error, setError] = useState(""); // 오류 메시지를 저장할 상태태
+export default function AuctionPage() {
+  const [auctions, setAuctions] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [timeLeft, setTimeLeft] = useState<{ [key: number]: string }>({});
 
-  //경매 목록을 서버에서 가져오는 함수
+  // 1) 경매 목록 조회
+  useEffect(() => {
+    fetchAuctions();
+  }, []);
+
   const fetchAuctions = async () => {
     setLoading(true);
     setError("");
 
     try {
-      //API 호출
       const response = await fetch("/api/auctions");
-      //응답이 정상적이지 않다면 에러가 발생
-      if (!response.ok) throw new Error("경매 목록 조회를 실패했습니다.");
-
-      //응답 데이터
+      if (!response.ok) throw new Error("경매 목록 조회 실패");
       const data = await response.json();
-      setAuctions(data.data); //경매 목록을 상태에 저장
+
+      // FINISHED 상태 제거
+      let filtered = data.data.filter(
+        (auction: any) => auction.status !== "FINISHED"
+      );
+
+      // 만약 데이터가 중복되어 들어온다면, auctionId 기준으로 중복 제거
+      // filtered = filtered.filter(
+      //   (auction: any, index: number, self: any[]) =>
+      //     index === self.findIndex((a) => a.auctionId === auction.auctionId)
+      // );
+
+      setAuctions(filtered);
     } catch (err: any) {
-      setError(err.message); //오류 발생 시 오류 메시지 저장
+      setError(err.message);
     } finally {
-      setLoading(false); //로딩 종료료
+      setLoading(false);
     }
   };
 
+  // 2) 남은 시간 계산 (1초마다 업데이트)
+  //    - ONGOING: endTime까지 남은 시간
+  //    - UPCOMING: startTime까지 남은 시간
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const updatedTimes: { [key: number]: string } = {};
+      const now = dayjs();
+
+      auctions.forEach((auction) => {
+        let targetTime;
+
+        if (auction.status === "ONGOING") {
+          targetTime = dayjs(auction.endTime);
+        } else if (auction.status === "UPCOMING") {
+          targetTime = dayjs(auction.startTime);
+        } else {
+          // FINISHED는 이미 목록에서 제거했으므로 처리 불필요
+          return;
+        }
+
+        const diff = targetTime.diff(now);
+
+        if (diff <= 0) {
+          updatedTimes[auction.auctionId] =
+            auction.status === "UPCOMING" ? "곧 시작" : "종료됨";
+        } else {
+          const hours = Math.floor(diff / (1000 * 60 * 60));
+          const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+          const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+          updatedTimes[
+            auction.auctionId
+          ] = `${hours}시간 ${minutes}분 ${seconds}초`;
+        }
+      });
+
+      setTimeLeft(updatedTimes);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [auctions]);
+
+  // 3) 진행 중 / 예정 경매 분리
+  const ongoingAuctions = auctions.filter((a) => a.status === "ONGOING");
+  const upcomingAuctions = auctions.filter((a) => a.status === "UPCOMING");
+
   return (
-    <div className="p-6">
-      {/* 경매 목록을 불러오는 버튼 */}
-      <button onClick={fetchAuctions} className="text-black">
-        전체 상품 목록 조회
-      </button>
+    <div className="p-8 space-y-8">
+      {loading && <p className="text-gray-600">불러오는 중...</p>}
+      {error && <p className="text-red-500">{error}</p>}
 
-      {/* 로딩 중일 때 불러오는 중 표시 */}
-      {loading && <p className="mt-4 text-gray-600">불러오는 중...</p>}
-      {/* 에러 발생시 오류 메시지 표시 */}
-      {error && <p className="mt-4 text-red-500">{error}</p>}
+      {/* 진행 중인 경매 */}
+      <div>
+        <h2 className="text-2xl font-bold mb-4">진행 중인 경매</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {ongoingAuctions.map((auction) => (
+            <AuctionCard
+              key={auction.auctionId}
+              auction={auction}
+              timeLeft={timeLeft[auction.auctionId]}
+              isOngoing={true}
+            />
+          ))}
+        </div>
+      </div>
 
-      {/* 경매 목록을 보여주는 리스트 */}
-      <ul className="mt-4 space-y-4">
-        {auctions.map((auction) => (
-          <li key={auction.auctionId} className="p-4 border rounded">
-            <h2 className="font-semibold">{auction.productName}</h2>
-            {/* 상품명*/}
-            <p>상태: {auction.status}</p> {/* 경매 상태*/}
-            <p>시작 시간: {auction.startTime}</p> {/* 경매 시작 시간*/}
-            <p>종료 시간: {auction.endTime}</p> {/* 경매 종료 시간*/}
-            {/* 경매 이미지 있다면 이미지 표시*/}
-            {auction.imageUrl && (
-              <img
-                src={auction.imageUrl}
-                alt={auction.productName} //이미지 대체 텍스트
-                className="w-32 mt-2" //이미 스타일일
-              />
-            )}
-          </li>
-        ))}
-      </ul>
-
-      <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-        <main className="flex flex-col gap-8 row-start-2 items-center">
-          <div className="relative w-[300px] h-[300px] md:w-[400px] md:h-[400px]">
-            <Image
-              src="/theMostHandsomePerson.png"
-              alt="The Most Handsome Person"
-              fill
-              className="object-cover rounded-lg"
-              priority
+      {/* 예정된 경매 */}
+      <div>
+        <h2 className="text-2xl font-bold mb-4">예정된 경매</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {upcomingAuctions.map((auction) => (
+            <AuctionCard
+              key={auction.auctionId}
+              auction={auction}
+              timeLeft={timeLeft[auction.auctionId]}
+              isOngoing={false}
             />
-          </div>
-          <h1 className="text-4xl font-bold text-center">Welcome to NBE</h1>
-          <p className="text-lg text-center text-muted-foreground">
-            신뢰할 수 있는 경매 플랫폼
-          </p>
-        </main>
-        <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-          <a
-            className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-            href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              aria-hidden
-              src="/file.svg"
-              alt="File icon"
-              width={16}
-              height={16}
-            />
-            Learn
-          </a>
-          <a
-            className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-            href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              aria-hidden
-              src="/window.svg"
-              alt="Window icon"
-              width={16}
-              height={16}
-            />
-            Examples
-          </a>
-          <a
-            className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-            href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              aria-hidden
-              src="/globe.svg"
-              alt="Globe icon"
-              width={16}
-              height={16}
-            />
-            Go to nextjs.org →
-          </a>
-        </footer>
+          ))}
+        </div>
       </div>
     </div>
   );
 }
+
+// 개별 경매 카드 컴포넌트
+const AuctionCard = ({
+  auction,
+  timeLeft,
+  isOngoing,
+}: {
+  auction: any;
+  timeLeft: string;
+  isOngoing: boolean;
+}) => (
+  <Card className="relative h-full flex flex-col justify-between">
+    <CardHeader>
+      <div className="flex justify-between items-center">
+        <CardTitle>{auction.productName}</CardTitle>
+        {isOngoing ? (
+          <Badge variant="destructive">LIVE</Badge>
+        ) : (
+          <Badge className="bg-yellow-400 text-white">예정</Badge>
+        )}
+      </div>
+    </CardHeader>
+
+    <CardContent>
+      {auction.imageUrl && (
+        <div className="w-full h-48 relative rounded overflow-hidden mb-4">
+          <Image
+            src={auction.imageUrl.trim()}
+            alt={auction.productName}
+            fill // Next.js 13에서는 layout="fill" 대신 fill 사용
+            style={{ objectFit: "cover" }}
+          />
+        </div>
+      )}
+
+      <p className="text-gray-600">
+        현재가: {auction.currentPrice?.toLocaleString()}원
+      </p>
+      <p className="text-gray-500 text-sm mt-2">
+        {isOngoing ? "남은 시간" : "시작까지 남은 시간"}:{" "}
+        <span className="font-semibold text-blue-600">
+          {timeLeft ?? (isOngoing ? "종료됨" : "곧 시작")}
+        </span>
+      </p>
+      <p className="text-sm text-gray-400 mt-2">
+        접속자 수: {Math.floor(Math.random() * 20) + 1}명
+      </p>
+    </CardContent>
+
+    <CardFooter>
+      {isOngoing ? (
+        <Link href={`/auctions/${auction.auctionId}`} className="w-full">
+          <Button className="w-full">경매 참여하기</Button>
+        </Link>
+      ) : (
+        <Button disabled className="w-full">
+          경매 대기 중
+        </Button>
+      )}
+    </CardFooter>
+  </Card>
+);
