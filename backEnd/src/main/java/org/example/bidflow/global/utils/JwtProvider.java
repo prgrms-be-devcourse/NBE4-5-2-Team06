@@ -49,6 +49,10 @@ public class JwtProvider {
         return parseClaims(token).get("nickname", String.class); // 자동으로 nickname 파싱
     }
 
+    public String parseRole(String token) {
+        return parseClaims(token).get("role", String.class);
+    }
+
 
     // 토큰 유효성 검증
     public boolean validateToken(String token) {
