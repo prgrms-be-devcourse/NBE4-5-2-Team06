@@ -21,7 +21,7 @@ export default function LoginPage() {
       localStorage.setItem("nickname", nickname);
 
       setToken(token);
-      alert(msg); // 로그인 성공 메시지
+      alert("로그인 성공!"); // 로그인 성공 메시지
       router.push("/"); // 로그인 성공 시 메인 페이지 이동
     } catch (err: any) {
       setError(err.message); // 백엔드에서 받은 에러 메시지를 UI에 표시
