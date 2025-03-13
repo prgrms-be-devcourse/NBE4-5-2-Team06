@@ -37,6 +37,21 @@ spring:
       settings:
         web-allow-others: true
 
+  mail:
+    host: smtp.gmail.com # Gmail SMTP 서버 호스트
+    port: 465 # Gmail SMTP 포트 (SSL을 사용할 경우 465)
+    username: bid.system.info@gmail.com # 이메일 발송에 사용할 Gmail 주소
+    password: tskqfpdczojlwfbh # 구글 앱 비밀번호 (2단계 인증 시 필요)
+    protocol: smtps # 이메일 전송에 사용할 프로토콜 (smtps는 SSL 보안 사용)
+
+    properties:
+      mail:
+        smtp:
+          auth: true # SMTP 서버 인증 사용 여부 (true로 설정)
+          timeout: 20000 # SMTP 서버와의 통신 시 대기 시간 (20초, 밀리초 단위)
+          connectiontimeout: 20000 # SMTP 서버와의 연결 시도 시간 (20초, 밀리초 단위)
+          writetimeout: 20000 # SMTP 서버로 데이터 전송 시 대기 시간 (20초, 밀리초 단위)
+
 logging:
   level:
     org.hibernate.SQL: DEBUG
