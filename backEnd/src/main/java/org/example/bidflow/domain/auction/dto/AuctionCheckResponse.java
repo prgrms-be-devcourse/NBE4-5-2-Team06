@@ -26,7 +26,7 @@ public class AuctionCheckResponse {
                     .auctionId(auction.getAuctionId())
                     .productName(auction.getProduct().getProductName())  // Product에서 상품명 가져오기
                     .imageUrl(auction.getProduct().getImageUrl())      // Product에서 이미지 URL 가져오기
-                    .currentPrice(auction.getStartPrice())  // 현재 가격 가져오기
+                    .currentBid(currentBid)  // 현재 가격 가져오기
                     .status(auction.getStatus().toString())  // 경매 상태 Enum을 String으로 변환하기
                     .startTime(auction.getStartTime())  //경매 시작 시간
                     .endTime(auction.getEndTime())  //경매 종료 시간
