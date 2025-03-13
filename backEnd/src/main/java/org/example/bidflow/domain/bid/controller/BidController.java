@@ -27,10 +27,10 @@ public class BidController {
     // 경매 입찰 컨트롤러
     @MessageMapping("/auction/bid")
     public void createBids(@Payload AuctionBidRequest request) {
-        String userUuid = jwtProvider.parseUserUuid(request.getToken());
+        String userUUID = jwtProvider.parseUserUUID(request.getToken());
         String nickname = jwtProvider.parseNickname(request.getToken());
 
-        log.info("입찰 요청 수신, userUUID  : {}, nickname: {}", userUuid,  nickname);
+        log.info("입찰 요청 수신, userUUID  : {}, nickname: {}", userUUID,  nickname);
 
         BidCreateResponse response = bidService.createBid(request.getAuctionId(), request);
 

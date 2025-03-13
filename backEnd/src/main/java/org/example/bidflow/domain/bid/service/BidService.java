@@ -16,7 +16,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Time;
 import java.time.LocalDateTime;
 
 @Service
@@ -79,8 +78,8 @@ public class BidService {
         LocalDateTime now = LocalDateTime.now();
 
         // 유저 및 경매 정보 가져오기
-        String userUUID = jwtProvider.parseUserUuid(request.getToken());    // jwt토큰 파싱해 유저UUID 가져오기
-        User user = userService.getUserByUuid(userUUID);
+        String userUUID = jwtProvider.parseUserUUID(request.getToken());    // jwt토큰 파싱해 유저UUID 가져오기
+        User user = userService.getUserByUUID(userUUID);
         Auction auction = auctionService.getAuctionWithValidation(auctionId);
 
         // 경매 시간 검증
@@ -95,7 +94,7 @@ public class BidService {
 
         // Redis에 입찰 정보 갱신
         redisCommon.putInHash(hashKey, "amount", request.getAmount());
-        redisCommon.putInHash(hashKey, "userUuid", userUUID);
+        redisCommon.putInHash(hashKey, "userUUID", userUUID);
 
         // DB 저장 (낙찰용 로그로 남김)
         Bid bid = Bid.createBid(auction, user, request.getAmount(), LocalDateTime.now());

@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 public class BidCreateResponse {
 
     private final Long auctionId;
-    private final String userUuid;
+    private final String userUUID;
     private final String  title;
     private final Integer bidAmount;
     private final LocalDateTime bidTime;
@@ -23,7 +23,7 @@ public class BidCreateResponse {
         Auction auction = bid.getAuction();
         return BidCreateResponse.builder()
                 .auctionId(auction.getAuctionId())
-                .userUuid(bid.getUser().getUserUuid())
+                .userUUID(bid.getUser().getUserUUID())
                 .title(auction.getProduct().getProductName())
                 .bidAmount(bid.getAmount())
                 .bidTime(bid.getBidTime())

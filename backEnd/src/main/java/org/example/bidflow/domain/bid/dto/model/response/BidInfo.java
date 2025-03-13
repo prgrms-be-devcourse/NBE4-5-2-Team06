@@ -11,5 +11,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class BidInfo {
     private Integer amount;
-    private String userUuid;
+    private String userUUID;
 }

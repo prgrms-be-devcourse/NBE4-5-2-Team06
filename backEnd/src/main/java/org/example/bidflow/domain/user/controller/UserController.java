@@ -53,9 +53,9 @@ public class UserController {
         return ResponseEntity.ok(Map.of("message", "로그아웃이 완료되었습니다."));
     }
 
-    @GetMapping("/users/{userId}") //특정 사용자 조회
-    public ResponseEntity<RsData<UserCheckRequest>> getUser(@PathVariable("userId") String userId) {
-    UserCheckRequest userCheck = userService.getUserCheck(userId);
+    @GetMapping("/users/{userUUID}") //특정 사용자 조회
+    public ResponseEntity<RsData<UserCheckRequest>> getUser(@PathVariable("userUUID") String userUUID) {
+    UserCheckRequest userCheck = userService.getUserCheck(userUUID);
     RsData<UserCheckRequest> rsData = new RsData<>("200" , "사용자 조회가 완료되었습니다.", userCheck);
     return ResponseEntity.ok(rsData);
     }

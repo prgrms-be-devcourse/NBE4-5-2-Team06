@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface WinnerRepository extends JpaRepository<Winner, Long> {
-    List<Winner> findByUser_UserUuid(String userUuid);
+    List<Winner> findByUser_UserUUID(String userUUID);
 }
