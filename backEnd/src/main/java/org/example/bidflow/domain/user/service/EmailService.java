@@ -1,13 +1,13 @@
-package org.example.bidflow.global.app;
+package org.example.bidflow.domain.user.service;
 
 import lombok.RequiredArgsConstructor;
 import org.example.bidflow.domain.user.repository.UserRepository;
+import org.example.bidflow.global.app.RedisCommon;
 import org.example.bidflow.global.exception.ServiceException;
 import org.springframework.http.HttpStatus;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
 

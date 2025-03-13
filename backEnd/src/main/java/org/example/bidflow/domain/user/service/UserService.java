@@ -5,7 +5,6 @@ import org.example.bidflow.data.Role;
 import org.example.bidflow.domain.user.dto.*;
 import org.example.bidflow.domain.user.entity.User;
 import org.example.bidflow.domain.user.repository.UserRepository;
-import org.example.bidflow.global.app.EmailService;
 import org.example.bidflow.global.exception.ServiceException;
 import org.example.bidflow.global.utils.JwtProvider;
 import org.springframework.http.HttpStatus;

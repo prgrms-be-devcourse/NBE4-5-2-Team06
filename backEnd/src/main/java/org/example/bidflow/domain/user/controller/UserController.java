@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.bidflow.domain.user.dto.*;
 import org.example.bidflow.domain.user.service.JwtBlacklistService;
 import org.example.bidflow.domain.user.service.UserService;
-import org.example.bidflow.global.app.EmailService;
+import org.example.bidflow.domain.user.service.EmailService;
 import org.example.bidflow.global.dto.RsData;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
