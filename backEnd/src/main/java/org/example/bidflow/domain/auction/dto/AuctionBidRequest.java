@@ -8,6 +8,7 @@ import org.example.bidflow.domain.auction.service.AuctionService;
 @Getter
 @Builder
 public class AuctionBidRequest {
-    private final String userUuid;
+    private final Long auctionId;
     private final Integer amount;
+    private final String token;
 }
