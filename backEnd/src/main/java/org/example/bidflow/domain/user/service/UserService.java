@@ -26,7 +26,7 @@ public class UserService {
 
 
     public  UserCheckRequest getUserCheck(String userUUID) {
-        User user = getUserByUUID(userUUID); //userUUID로 조회
+        User user = getUserByUuid(userUUID); //userUUID로 조회
         return UserCheckRequest.from(user); //DTO로 반환한다
     }
 //    public User getUserUserId(Long auctionId) {
@@ -97,4 +97,16 @@ public class UserService {
         return UserSignInResponse.from(user, token);
     }
 
+    public UserPutRequest updateUser(String userUUID, UserPutRequest request) {
+        User user = getUserByUuid(userUUID); //사용자 조회
+
+        user.setProfileImage(request.getProfileImage()); //변경내용
+        user.setNickname(request.getNickname());    //변경 내용
+        user.setEmail(request.getEmail()); //변경 내용
+
+        User updatedUser = userRepository.save(user); //변경 내용을 저장
+        return UserPutRequest.from(updatedUser); //변경 내용이 저장된걸 DTO로 변환
+    }
+
 }
+

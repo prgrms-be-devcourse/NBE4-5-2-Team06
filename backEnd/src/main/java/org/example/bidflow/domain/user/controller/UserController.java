@@ -19,6 +19,7 @@ public class UserController {
 
     private final UserService userService;
     private final JwtBlacklistService blacklistService;
+
     // 회원가입
     @PostMapping("/signup")
     public ResponseEntity<RsData<UserSignUpResponse>> signup(@Valid @RequestBody UserSignUpRequest request) {
@@ -26,7 +27,7 @@ public class UserController {
         UserSignUpResponse response = userService.signup(request);
 
         // 회원가입 성공 시 응답 데이터 생성 (201: Created)
-        RsData<UserSignUpResponse> rsData  = new RsData<>("201", "회원가입이 완료되었습니다.", response);
+        RsData<UserSignUpResponse> rsData = new RsData<>("201", "회원가입이 완료되었습니다.", response);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(rsData);
     }
@@ -39,7 +40,7 @@ public class UserController {
         UserSignInResponse response = userService.login(request);
 
         // 성공 응답 생성
-        RsData<UserSignInResponse> rsData  = new RsData<>("200", "로그인이 완료되었습니다.", response);
+        RsData<UserSignInResponse> rsData = new RsData<>("200", "로그인이 완료되었습니다.", response);
 
         // HTTP 200 OK 응답 반환
         return ResponseEntity.ok(rsData);
@@ -55,8 +56,16 @@ public class UserController {
 
     @GetMapping("/users/{userUUID}") //특정 사용자 조회
     public ResponseEntity<RsData<UserCheckRequest>> getUser(@PathVariable("userUUID") String userUUID) {
-    UserCheckRequest userCheck = userService.getUserCheck(userUUID);
-    RsData<UserCheckRequest> rsData = new RsData<>("200" , "사용자 조회가 완료되었습니다.", userCheck);
-    return ResponseEntity.ok(rsData);
+        UserCheckRequest userCheck = userService.getUserCheck(userUUID);
+        RsData<UserCheckRequest> rsData = new RsData<>("200", "사용자 조회가 완료되었습니다.", userCheck);
+        return ResponseEntity.ok(rsData);
     }
+
+   @PutMapping("/users/{userUUID}")
+    public ResponseEntity<RsData<UserPutRequest>> putUser(@PathVariable("userUUID") String userUUID ,@RequestBody UserPutRequest request) {
+        UserPutRequest userPut = userService.updateUser(userUUID, request);
+        RsData<UserPutRequest> rsData = new RsData<>("200", "사용자 정보 수정이 완료되었습니다.", userPut);
+        return ResponseEntity.ok(rsData);
+    }
+
 }
