@@ -98,7 +98,7 @@ public class UserService {
     }
 
     public UserPutRequest updateUser(String userUUID, UserPutRequest request) {
-        User user = getUserByUuid(userUUID); //사용자 조회
+        User user = getUserByUUID(userUUID); //사용자 조회
 
         user.setProfileImage(request.getProfileImage()); //변경내용
         user.setNickname(request.getNickname());    //변경 내용
