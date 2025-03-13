@@ -14,17 +14,19 @@ public class AuctionDetailResponse {
     private final Long auctionId;
     private final ProductResponse product;
     private final Integer startPrice;
+    private final Integer currentBid;
     private final Integer minBid;
     private final LocalDateTime startTime;
     private final LocalDateTime endTime;
     private final String status;
 
     // 엔티티를 DTO로 변환
-    public static AuctionDetailResponse from(Auction auction) {
+    public static AuctionDetailResponse from(Auction auction, Integer amount) {
         return AuctionDetailResponse.builder()
                 .auctionId(auction.getAuctionId())
                 .product(ProductResponse.from(auction.getProduct()))      // product DTO 변환
                 .startPrice(auction.getStartPrice())
+                .currentBid(amount)
                 .minBid(auction.getMinBid())
                 .startTime(auction.getStartTime())
                 .endTime(auction.getEndTime())

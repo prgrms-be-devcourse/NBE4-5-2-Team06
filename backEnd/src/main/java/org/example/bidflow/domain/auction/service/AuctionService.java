@@ -38,14 +38,14 @@ public class AuctionService {
             throw new ServiceException("404", "경매 목록 조회 실패");
         }
 
-        // explain: Redis 에서 최고가(amount)를 가져오는 로직 추가
-        auctions.forEach(auction -> {
-            String hashKey = "auction:" + auction.getAuctionId();
-            Integer amount = redisCommon.getFromHash(hashKey, "amount", Integer.class); // amount : Redis 에서 가져온 최고가
-        });
-
+        // Auction 엔티티를 AuctionCheckResponse DTO로 변환
         return auctions.stream()
-                .map(AuctionCheckResponse::from)  // Auction 엔티티를 AuctionCheckResponse DTO로 변환
+                .map(auction -> {
+                    String hashKey = "auction:" + auction.getAuctionId();
+                    Integer amount = redisCommon.getFromHash(hashKey, "amount", Integer.class); // amount : Redis 에서 가져온 최고가
+                    log.info("amount: {}", amount);
+                    return AuctionCheckResponse.from(auction, amount);
+                })
                 .collect(Collectors.toList());
     }
 
@@ -126,8 +126,9 @@ public class AuctionService {
         // explain: Redis 에서 최고가(amount)를 가져오는 로직 추가
         String hashKey = "auction:" + auction.getAuctionId();
         Integer amount = redisCommon.getFromHash(hashKey, "amount", Integer.class); // amount : Redis 에서 가져온 최고가
+        log.info("DetailCurrentAmount: {}", amount);
 
-        return AuctionDetailResponse.from(auction); // DTO 변환 후 반환
+        return AuctionDetailResponse.from(auction, amount); // DTO 변환 후 반환
     }
 
     // 경매 조회 및 상태 검증 메서드

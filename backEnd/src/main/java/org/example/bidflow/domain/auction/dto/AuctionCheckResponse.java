@@ -13,7 +13,7 @@ public class AuctionCheckResponse {
     private Long auctionId;
     private String productName;
     private String imageUrl;
-    private Integer currentPrice;
+    private Integer currentBid;
     private String status;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
@@ -21,7 +21,7 @@ public class AuctionCheckResponse {
 
 
        //Entity -> DTO 변환
-        public static AuctionCheckResponse from(Auction auction) {
+        public static AuctionCheckResponse from(Auction auction, Integer currentBid) {
             return AuctionCheckResponse.builder()
                     .auctionId(auction.getAuctionId())
                     .productName(auction.getProduct().getProductName())  // Product에서 상품명 가져오기
