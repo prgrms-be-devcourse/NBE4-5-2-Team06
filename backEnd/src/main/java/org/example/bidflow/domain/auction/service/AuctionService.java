@@ -120,6 +120,11 @@ public class AuctionService {
     @Transactional
     public AuctionDetailResponse getAuctionDetail(Long auctionId) {
         Auction auction = getAuctionWithValidation(auctionId); // 경매 ID로 경매 데이터 조회 및 상태 검증
+
+        // explain: Redis 에서 최고가(amount)를 가져오는 로직 추가
+        String hashKey = "auction:" + auction.getAuctionId();
+        Integer amount = redisCommon.getFromHash(hashKey, "amount", Integer.class); // amount : Redis 에서 가져온 최고가
+
         return AuctionDetailResponse.from(auction); // DTO 변환 후 반환
     }
 
