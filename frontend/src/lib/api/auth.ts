@@ -31,7 +31,7 @@ export async function signupUser(
     throw new Error(res.msg);
   }
 
-  return res.msg; // 성공 응답 반환 (user_uuid 포함)
+  return res.msg; // 성공 응답 반환 (userUUID 포함)
 }
 
 export const getAccessToken = () => {
@@ -40,13 +40,13 @@ export const getAccessToken = () => {
 
 export const getUserInfo = () => {
   return {
-    userUuid: localStorage.getItem("userUuid"),
+    userUUID: localStorage.getItem("userUUID"),
     nickname: localStorage.getItem("nickname"),
   };
 };
 
 export const removeAuthData = () => {
   localStorage.removeItem("accessToken");
-  localStorage.removeItem("userUuid");
+  localStorage.removeItem("userUUID");
   localStorage.removeItem("nickname");
 };

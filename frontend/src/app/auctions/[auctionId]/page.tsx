@@ -125,8 +125,8 @@ export default function AuctionPage() {
 
   // ✅ 입찰 요청 (WebSocket 전송)
   const handleBid = async (amount: number) => {
-    const userUuid = localStorage.getItem("userUuid") || "";
-    if (!userUuid) return alert("로그인이 필요합니다.");
+    const userUUID = localStorage.getItem("userUUID") || "";
+    if (!userUUID) return alert("로그인이 필요합니다.");
 
     // WebSocket 연결 상태 확인
     if (!client || !client.connected) {
@@ -137,7 +137,7 @@ export default function AuctionPage() {
 
     console.log("[AuctionPage] 입찰 메시지 전송 시도:", {
       auctionId,
-      userUuid,
+      userUUID,
       amount,
     });
 

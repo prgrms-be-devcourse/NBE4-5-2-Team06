@@ -14,10 +14,10 @@ export default function LoginPage() {
   const handleLogin = async (email: string, password: string) => {
     try {
       const { data, msg } = await loginUser(email, password);
-      const { token, userUuid, nickname } = await loginUser(email, password);
+      const { token, userUUID, nickname } = await loginUser(email, password);
 
       localStorage.setItem("accessToken", token);
-      localStorage.setItem("userUuid", userUuid);
+      localStorage.setItem("userUUID", userUUID);
       localStorage.setItem("nickname", nickname);
 
       setToken(token);
