@@ -1,14 +1,24 @@
-import type { NextConfig } from "next";
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  reactStrictMode: false,
 
-const nextConfig: NextConfig = {
+  // 외부 이미지 도메인 등록
+  images: {
+    domains: [
+      "store.storeimages.cdn-apple.com",
+      "sitem.ssgcdn.com",
+      "m.media-amazon.com",
+    ],
+  },
+
   async rewrites() {
     return [
       {
-        source: "/api/auctions", // 프론트엔드에서 요청하는 경로
-        destination: "http://localhost:8080/api/auctions", // 백엔드 실제 API 경로
+        source: "/api/auctions",
+        destination: "http://localhost:8080/api/auctions",
       },
     ];
   },
 };
 
-export default nextConfig;
+module.exports = nextConfig;
