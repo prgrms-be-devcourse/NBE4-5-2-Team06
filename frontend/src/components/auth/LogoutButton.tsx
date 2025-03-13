@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { removeAuthData } from "@/lib/utils/auth";
+import { removeAuthData } from "@/lib/api/auth";
 
 export const LogoutButton = () => {
   const router = useRouter();
