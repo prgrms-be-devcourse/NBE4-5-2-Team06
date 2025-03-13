@@ -12,7 +12,7 @@ public class UserPutRequest {
     private String nickname;
     private String email;
 
-    public UserPutRequest from(User user) {
+    public static UserPutRequest from(User user) {
         return UserPutRequest.builder()
                 .profileImage(user.getProfileImage())
                 .nickname(user.getNickname())
