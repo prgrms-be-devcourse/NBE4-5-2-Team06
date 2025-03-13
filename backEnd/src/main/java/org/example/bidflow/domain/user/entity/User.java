@@ -32,6 +32,9 @@ public class User {
     @Column(name = "PASSWORD", nullable = false)
     private String password;
 
+    @Column(name = "profileImage")
+    private String profileImage;
+
     @Builder.Default
     @Column(name = "CREATED_DATE")
     private LocalDateTime createdDate = LocalDateTime.now();

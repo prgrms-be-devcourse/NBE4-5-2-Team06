@@ -1,12 +1,8 @@
 package org.example.bidflow.domain.user.controller;
 
-import io.jsonwebtoken.Claims;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.example.bidflow.domain.user.dto.UserSignInRequest;
-import org.example.bidflow.domain.user.dto.UserSignInResponse;
-import org.example.bidflow.domain.user.dto.UserSignUpRequest;
-import org.example.bidflow.domain.user.dto.UserSignUpResponse;
+import org.example.bidflow.domain.user.dto.*;
 import org.example.bidflow.domain.user.service.JwtBlacklistService;
 import org.example.bidflow.domain.user.service.UserService;
 import org.example.bidflow.global.dto.RsData;
@@ -55,5 +51,12 @@ public class UserController {
 
         blacklistService.addToBlacklist(token);
         return ResponseEntity.ok(Map.of("message", "로그아웃이 완료되었습니다."));
+    }
+
+    @GetMapping("/users/{userId}") //특정 사용자 조회
+    public ResponseEntity<RsData<UserCheckRequest>> getUser(@PathVariable("userId") String userId) {
+    UserCheckRequest userCheck = userService.getUserCheck(userId);
+    RsData<UserCheckRequest> rsData = new RsData<>("200" , "사용자 조회가 완료되었습니다.", userCheck);
+    return ResponseEntity.ok(rsData);
     }
 }
