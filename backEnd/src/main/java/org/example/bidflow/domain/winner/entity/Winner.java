@@ -18,7 +18,7 @@ public class Winner {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "WINNER_ID")
-    private Long usrId;
+    private Long winnerId;
 
     @ManyToOne
     @JoinColumn(name = "USER_UUID", nullable = false)
