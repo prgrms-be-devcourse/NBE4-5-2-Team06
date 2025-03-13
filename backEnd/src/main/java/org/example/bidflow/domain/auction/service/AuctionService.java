@@ -35,6 +35,13 @@ public class AuctionService {
         if (auctions.isEmpty()) { // 리스트가 비어있을경우 예외처리
             throw new ServiceException("404", "경매 목록 조회 실패");
         }
+
+        // explain: Redis 에서 최고가(amount)를 가져오는 로직 추가
+        auctions.forEach(auction -> {
+            String hashKey = "auction:" + auction.getAuctionId();
+            Integer amount = redisCommon.getFromHash(hashKey, "amount", Integer.class); // amount : Redis 에서 가져온 최고가
+        });
+
         return auctions.stream()
                 .map(AuctionCheckResponse::from)  // Auction 엔티티를 AuctionCheckResponse DTO로 변환
                 .collect(Collectors.toList());
