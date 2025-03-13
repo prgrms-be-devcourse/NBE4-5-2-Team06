@@ -26,7 +26,7 @@ public class UserService {
 
 
     public  UserCheckRequest getUserCheck(String userUUID) {
-        User user = getUserByUuid(userUUID); //userUuid로 조회
+        User user = getUserByUuid(userUUID); //userUUID로 조회
         return UserCheckRequest.from(user); //DTO로 반환한다
     }
 //    public User getUserUserId(Long auctionId) {
