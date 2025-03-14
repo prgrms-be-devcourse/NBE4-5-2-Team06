@@ -1,3 +1,5 @@
+// src/components/auth/LogoutButton.tsx
+
 "use client";
 
 import { useRouter } from "next/navigation";
@@ -8,17 +10,35 @@ export const LogoutButton = () => {
 
   const handleLogout = async () => {
     try {
-      await fetch("http://localhost:8080/api/auth/logout", {
+      const token = localStorage.getItem("accessToken");
+      if (!token) {
+        alert("로그인 정보가 없습니다.");
+        return;
+      }
+
+      // 서버에 로그아웃 요청
+      const res = await fetch("http://localhost:8080/api/auth/logout", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token: localStorage.getItem("accessToken") }),
+        headers: {
+          "Content-Type": "application/json",
+          // ★ Authorization 헤더로 토큰 전송
+          Authorization: `Bearer ${token}`,
+        },
       });
 
-      removeAuthData(); // 로컬 스토리지에서 인증 정보 삭제
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.message || "로그아웃 요청 실패");
+      }
+
+      // 인증 정보 삭제
+      removeAuthData(); // 내부에서 localStorage.removeItem("accessToken") 등 수행
+
       alert("로그아웃 되었습니다.");
-      router.push("/login");
+      router.push("/");
     } catch (error) {
       console.error("로그아웃 실패", error);
+      alert("로그아웃 실패: " + (error as Error).message);
     }
   };
 

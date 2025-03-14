@@ -1,3 +1,4 @@
+// src/components/auth/SignUpForm.tsx
 "use client";
 
 import React, { useState } from "react";

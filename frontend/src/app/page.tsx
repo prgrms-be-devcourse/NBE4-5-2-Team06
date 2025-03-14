@@ -12,7 +12,7 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/Button";
+import { Button } from "@/components/ui/button";
 
 export default function AuctionPage() {
   const [auctions, setAuctions] = useState<any[]>([]);
@@ -59,14 +59,20 @@ export default function AuctionPage() {
 
         const diff = targetTime.diff(now);
         const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const hours = Math.floor(
+          (diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+        );
         const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((diff % (1000 * 60)) / 1000);
 
         if (days > 0) {
-          updatedTimes[auction.auctionId] = `${days}일 ${hours}시간 ${minutes}분 ${seconds}초`;
+          updatedTimes[
+            auction.auctionId
+          ] = `${days}일 ${hours}시간 ${minutes}분 ${seconds}초`;
         } else {
-          updatedTimes[auction.auctionId] = `${hours}시간 ${minutes}분 ${seconds}초`;
+          updatedTimes[
+            auction.auctionId
+          ] = `${hours}시간 ${minutes}분 ${seconds}초`;
         }
       });
 
@@ -80,15 +86,25 @@ export default function AuctionPage() {
   const ongoingAuctions = auctions.filter(
     (a) => now.isAfter(dayjs(a.startTime)) && now.isBefore(dayjs(a.endTime))
   );
-  const upcomingAuctions = auctions.filter((a) => now.isBefore(dayjs(a.startTime)));
+  const upcomingAuctions = auctions.filter((a) =>
+    now.isBefore(dayjs(a.startTime))
+  );
 
   return (
     <div className="p-8 space-y-8">
       {loading && <p className="text-gray-600">불러오는 중...</p>}
       {error && <p className="text-red-500">{error}</p>}
 
-      <AuctionSection title="진행 중인 경매" auctions={ongoingAuctions} timeLeft={timeLeft} />
-      <AuctionSection title="예정된 경매" auctions={upcomingAuctions} timeLeft={timeLeft} />
+      <AuctionSection
+        title="진행 중인 경매"
+        auctions={ongoingAuctions}
+        timeLeft={timeLeft}
+      />
+      <AuctionSection
+        title="예정된 경매"
+        auctions={upcomingAuctions}
+        timeLeft={timeLeft}
+      />
     </div>
   );
 }
@@ -145,31 +161,50 @@ const AuctionCard = ({
     <CardContent>
       {auction.imageUrl && (
         <div className="w-full h-48 relative rounded overflow-hidden mb-4">
-          <Image src={auction.imageUrl.trim()} alt={auction.productName} fill style={{ objectFit: "cover" }} />
+          <Image
+            src={auction.imageUrl.trim()}
+            alt={auction.productName}
+            fill
+            style={{ objectFit: "cover" }}
+          />
         </div>
       )}
 
-      <p className={`mt-2 ${isOngoing ? "text-red-600 font-bold" : "text-gray-600"}`}>
+      <p
+        className={`mt-2 ${
+          isOngoing ? "text-red-600 font-bold" : "text-gray-600"
+        }`}
+      >
         현재가: {auction.currentBid?.toLocaleString()}원
       </p>
 
       <p className="text-gray-500 text-sm mt-2">
-        {isOngoing ? "남은 시간" : "시작까지 남은 시간"}: {" "}
-        <span className={`font-semibold ${checkDangerTime(timeLeft) ? "text-red-600" : "text-blue-600"}`}>{
-          timeLeft ?? (isOngoing ? "종료됨" : "곧 시작")
-        }</span>
+        {isOngoing ? "남은 시간" : "시작까지 남은 시간"}:{" "}
+        <span
+          className={`font-semibold ${
+            checkDangerTime(timeLeft) ? "text-red-600" : "text-blue-600"
+          }`}
+        >
+          {timeLeft ?? (isOngoing ? "종료됨" : "곧 시작")}
+        </span>
       </p>
 
-      <p className="text-sm text-gray-400 mt-2">접속자 수: {Math.floor(Math.random() * 20) + 1}명</p>
+      <p className="text-sm text-gray-400 mt-2">
+        접속자 수: {Math.floor(Math.random() * 20) + 1}명
+      </p>
     </CardContent>
 
     <CardFooter>
       {isOngoing ? (
         <Link href={`/auctions/${auction.auctionId}`} className="w-full">
-          <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">경매 참여하기</Button>
+          <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">
+            경매 참여하기
+          </Button>
         </Link>
       ) : (
-        <Button disabled className="w-full">경매 대기 중</Button>
+        <Button disabled className="w-full">
+          경매 대기 중
+        </Button>
       )}
     </CardFooter>
   </Card>
