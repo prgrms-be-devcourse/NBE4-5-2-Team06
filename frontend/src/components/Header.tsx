@@ -4,9 +4,17 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { useEffect, useState } from "react";
 
 export function Header() {
   const router = useRouter();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  // 로그인 상태 확인
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+    setIsLoggedIn(!!token);
+  }, []);
 
   // 로그아웃 처리 함수
   const handleLogout = async () => {
@@ -36,6 +44,7 @@ export function Header() {
       localStorage.removeItem("userUUID");
       // 필요하면 다른 키도 삭제
 
+      setIsLoggedIn(false);
       alert("로그아웃 되었습니다.");
       router.push("/auth/login"); // 로그인 페이지 등으로 이동
     } catch (error) {
@@ -52,19 +61,25 @@ export function Header() {
         </Link>
 
         <nav className="flex items-center gap-4">
-          <Link href="/auth/login">
-            <Button variant="ghost">로그인</Button>
-          </Link>
-          <Link href="/auth/register">
-            <Button>회원가입</Button>
-          </Link>
-          <Link href="/mypage">
-            <Button variant="outline">마이페이지</Button>
-          </Link>
-          {/* 로그아웃 버튼 */}
-          <Button variant="outline" onClick={handleLogout}>
-            로그아웃
-          </Button>
+          {!isLoggedIn ? (
+            <>
+              <Link href="/auth/login">
+                <Button variant="ghost">로그인</Button>
+              </Link>
+              <Link href="/auth/register">
+                <Button>회원가입</Button>
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link href="/mypage">
+                <Button variant="outline">마이페이지</Button>
+              </Link>
+              <Button variant="outline" onClick={handleLogout}>
+                로그아웃
+              </Button>
+            </>
+          )}
         </nav>
       </div>
     </header>
