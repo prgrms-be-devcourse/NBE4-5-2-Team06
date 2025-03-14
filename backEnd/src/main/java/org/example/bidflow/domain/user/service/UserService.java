@@ -58,13 +58,13 @@ public class UserService {
         }
 
         // 비밀번호 암호화
-        String encodedPassword = passwordEncoder.encode(request.getPassword());
+//        String encodedPassword = passwordEncoder.encode(request.getPassword());
 
         // User 엔티티 생성
         User user = User.builder()
                 .userUUID(System.currentTimeMillis() + "-" + UUID.randomUUID())
                 .email(request.getEmail())
-                .password(encodedPassword)
+                .password(request.getPassword())
                 .nickname(request.getNickname())
                 .role(Role.USER)
                 .build();
@@ -88,9 +88,9 @@ public class UserService {
                 .orElseThrow(() -> new ServiceException(HttpStatus.UNAUTHORIZED.value() + "", "이메일 또는 비밀번호가 일치하지 않습니다."));
 
         // 입력된 비밀번호가 저장된 비밀번호와 일치하는지 확인 (일치하지 않으면 예외 발생)
-        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new ServiceException(HttpStatus.UNAUTHORIZED.value() + "", "이메일 또는 비밀번호가 일치하지 않습니다.");
-        }
+//        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+//            throw new ServiceException(HttpStatus.UNAUTHORIZED.value() + "", "이메일 또는 비밀번호가 일치하지 않습니다.");
+//        }
 
         // JWT 토큰 발행 시 포함할 사용자 정보 설정
         Map<String, Object> claims = new HashMap<>();
