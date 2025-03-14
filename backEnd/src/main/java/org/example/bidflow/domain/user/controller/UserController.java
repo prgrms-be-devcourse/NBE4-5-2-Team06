@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.bidflow.domain.user.dto.*;
 import org.example.bidflow.domain.user.service.JwtBlacklistService;
 import org.example.bidflow.domain.user.service.UserService;
+import org.example.bidflow.domain.user.service.EmailService;
 import org.example.bidflow.global.dto.RsData;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,7 @@ public class UserController {
 
     private final UserService userService;
     private final JwtBlacklistService blacklistService;
+    private final EmailService emailService;
 
     // 회원가입
     @PostMapping("/signup")
@@ -66,6 +68,23 @@ public class UserController {
         UserPutRequest userPut = userService.updateUser(userUUID, request);
         RsData<UserPutRequest> rsData = new RsData<>("200", "사용자 정보 수정이 완료되었습니다.", userPut);
         return ResponseEntity.ok(rsData);
+    }
+
+    @PostMapping("/send-code")
+    public ResponseEntity<RsData> sendVerticationCode(@RequestBody @Valid EmailSendRequest request)
+    {
+        emailService.sendVerificationCode(request.getEmail());
+        RsData rsData = new RsData("200","인증코드가 전송되었습니다.");
+        return ResponseEntity.ok(rsData);
+    }
+
+    @PostMapping("/vertify")
+    public ResponseEntity<RsData> vertify(@RequestBody @Valid EmailVerificationRequest request) {
+        boolean isValidCode = emailService.vertifyCode(request.getEmail(),request.getCode());
+
+        return isValidCode
+                ? ResponseEntity.ok(new RsData("200", "이메일 인증이 처리되었습니다."))
+                : ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new RsData("400", "인증코드가 일치하지 않습니다."));
     }
 
 }

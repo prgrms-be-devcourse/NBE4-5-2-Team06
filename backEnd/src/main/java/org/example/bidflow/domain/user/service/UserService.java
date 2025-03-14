@@ -23,7 +23,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
-
+    private final EmailService emailService;
 
     public  UserCheckRequest getUserCheck(String userUUID) {
         User user = getUserByUUID(userUUID); //userUUID로 조회
@@ -40,6 +40,14 @@ public class UserService {
 
 
     public UserSignUpResponse signup(UserSignUpRequest request) {
+
+        if (emailService.isVerificationExpired(request.getEmail())) {
+            throw new ServiceException(HttpStatus.UNAUTHORIZED.value() + "", "이메일 인증이 만료되었습니다. 다시 인증해 주세요.");
+        }
+
+        if (!emailService.isVerified(request.getEmail())) {
+            throw new ServiceException(HttpStatus.UNAUTHORIZED.value() + "", "이메일 인증이 완료되지 않았습니다.");
+        }
 
         // 이메일 혹은 닉네임으로 존재하는 유저가 있는지 확인
         Optional<User> existingUser = userRepository.findByEmailOrNickname(request.getEmail(), request.getNickname());
