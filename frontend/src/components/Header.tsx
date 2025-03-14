@@ -1,4 +1,3 @@
-// src/components/Header.tsx
 "use client";
 
 import Link from "next/link";
@@ -12,9 +11,34 @@ export function Header() {
 
   // 로그인 상태 확인
   useEffect(() => {
+    // 초기 로그인 상태 확인
+    checkLoginStatus();
+
+    // 로컬 스토리지 변경 이벤트 리스너 추가
+    window.addEventListener('storage', handleStorageChange);
+    
+    // 커스텀 이벤트 리스너 추가
+    window.addEventListener('login-status-change', checkLoginStatus);
+
+    return () => {
+      // 컴포넌트 언마운트 시 이벤트 리스너 제거
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('login-status-change', checkLoginStatus);
+    };
+  }, []);
+
+  // 로그인 상태 확인 함수
+  const checkLoginStatus = () => {
     const token = localStorage.getItem("accessToken");
     setIsLoggedIn(!!token);
-  }, []);
+  };
+
+  // 로컬 스토리지 변경 감지 함수
+  const handleStorageChange = (event) => {
+    if (event.key === "accessToken") {
+      checkLoginStatus();
+    }
+  };
 
   // 로그아웃 처리 함수
   const handleLogout = async () => {
