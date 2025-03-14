@@ -36,6 +36,9 @@ public class AuctionScheduler {
         }
 
         for (String key : keys) {
+
+            if(!key.startsWith("auction")) { continue;}
+
             String id = key.split(":")[1];
             Long auctionId = Long.valueOf(id);
             Long ttl = redisCommon.getTTL(key);

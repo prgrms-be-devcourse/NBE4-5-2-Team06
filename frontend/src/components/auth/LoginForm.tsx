@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 
 interface LoginFormProps {
   onSubmit: (email: string, password: string) => void;
@@ -10,10 +11,11 @@ interface LoginFormProps {
 export const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, error }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const router = useRouter();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(email, password); // 상위에서 받은 로직 실행
+    onSubmit(email, password);
   };
 
   return (
@@ -62,6 +64,15 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, error }) => {
           >
             로그인
           </button>
+          <p className="text-sm text-gray-500">
+            회원이 아니신가요?{' '}
+            <span
+              onClick={() => router.push('/auth/register')}
+              className="text-blue-500 hover:underline cursor-pointer"
+            >
+              회원가입
+            </span>
+          </p>
         </form>
       </div>
     </div>

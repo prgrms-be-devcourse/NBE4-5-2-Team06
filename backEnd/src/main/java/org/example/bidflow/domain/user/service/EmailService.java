@@ -1,6 +1,8 @@
 package org.example.bidflow.domain.user.service;
 
 import jakarta.mail.internet.MimeMessage;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.example.bidflow.domain.user.repository.UserRepository;
 import org.example.bidflow.global.app.RedisCommon;
@@ -19,7 +21,7 @@ public class EmailService {
 
     private final JavaMailSender mailSender;
     private final RedisCommon redisCommon;
-    private static final long VERIFICATION_CODE_EXPIRATION = 60 * 3; // 이메일 인증을 완료해야 하는 시간을 3분으로 설정
+    private static final long VERIFICATION_CODE_EXPIRATION = 60 * 4; // 이메일 인증을 완료해야 하는 시간을 3분 + 여유으로 설정
     private static final long EMAIL_AUTH_EXPIRATION = 60 * 10; // 인증 후 10분간 유효
     private final UserRepository userRepository;
 
@@ -99,10 +101,11 @@ public class EmailService {
         return "true".equals(checkVertified);
     }
 
-    private String generateCode() {
-        return String.valueOf((int)(Math.random()* 900000) + 100000);
-    }
+    public void deleteVerificationCode(String key) {
 
+        String authHashKey = getAuthHashKey(key);
+        redisCommon.setExpireAt(authHashKey,LocalDateTime.now().plusSeconds(10));
+    }
 
     public boolean isVerificationExpired(String email) {
         String hashKey = getAuthHashKey(email);
@@ -110,7 +113,13 @@ public class EmailService {
         return (ttl == null || ttl <= 0);
     }
 
+    private String generateCode() {
+        return String.valueOf((int)(Math.random()* 900000) + 100000);
+    }
+
     private static String getAuthHashKey(String email) {
         return "auth:" + email;
     }
+
+
 }

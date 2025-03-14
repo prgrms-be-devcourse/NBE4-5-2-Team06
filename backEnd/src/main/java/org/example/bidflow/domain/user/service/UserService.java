@@ -56,8 +56,8 @@ public class UserService {
         if(existingUser.isPresent()) {
             throw new ServiceException(HttpStatus.CONFLICT.value() + "", "이미 사용 중인 이메일 또는 닉네임입니다.");
         }
-
-        // 비밀번호 암호화
+//
+//         // 비밀번호 암호화
 //        String encodedPassword = passwordEncoder.encode(request.getPassword());
 
         // User 엔티티 생성
@@ -71,6 +71,9 @@ public class UserService {
 
         // 데이터베이스에 저장
         userRepository.save(user);
+
+        // Redis에서 인증 정보 삭제
+        emailService.deleteVerificationCode(request.getEmail());
 
         return UserSignUpResponse.from(user);
     }
@@ -108,7 +111,7 @@ public class UserService {
     public UserPutRequest updateUser(String userUUID, UserPutRequest request) {
         User user = getUserByUUID(userUUID); //사용자 조회
 
-        user.setProfileImage(request.getProfileImage()); //변경내용
+        user.setProfileImage(request.getProfileImage()); // 변경내용
         user.setNickname(request.getNickname());    //변경 내용
         user.setEmail(request.getEmail()); //변경 내용
 
