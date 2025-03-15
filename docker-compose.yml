@@ -50,7 +50,7 @@ services:
 
   spring-app:
 #    build: build/generated/sources/annotationProcessor/java/main
-    build: .
+    build: ./backEnd
     container_name: spring-app
     ports:
       - "8080:8080"
@@ -74,7 +74,7 @@ services:
 
   # 여기에 프론트엔드 서비스 추가
   frontend:
-    build: ../../../../frontend
+    build: ./frontend
     container_name: next-frontend
     ports:
       - "3000:3000"
