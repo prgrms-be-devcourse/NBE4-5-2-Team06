@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 public class WinnerCheckResponse {
     private final Long auctionId;
     private final String productName;
+    private final String description;
     private final Integer winningBid;
     private final LocalDateTime winTime;
     private String imageUrl;
@@ -21,6 +22,7 @@ public class WinnerCheckResponse {
         return WinnerCheckResponse.builder()
                 .auctionId(winner.getAuction().getAuctionId())
                 .productName(winner.getAuction().getProduct().getProductName())
+                .description(winner.getAuction().getProduct().getDescription())
                 .winningBid(winner.getWinningBid())
                 .winTime(winner.getWinTime())
                 .build();

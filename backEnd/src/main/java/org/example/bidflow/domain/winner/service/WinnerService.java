@@ -32,6 +32,7 @@ public class WinnerService {
                 .map(winner -> WinnerCheckResponse.builder()
                         .auctionId(winner.getAuction().getAuctionId())
                         .productName(winner.getAuction().getProduct().getProductName())
+                        .description(winner.getAuction().getProduct().getDescription())
                         .winningBid(winner.getWinningBid())
                         .winTime(winner.getWinTime())
                         .imageUrl(winner.getAuction().getProduct().getImageUrl())
