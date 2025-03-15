@@ -77,8 +77,9 @@ export default function MyPage() {
               </div>
               <p className="text-sm font-semibold mt-2">{auction.productName}</p>
               <p className="text-xs text-gray-600">{auction.description || "설명 없음"}</p>
-              <p className="text-blue-500 font-bold">낙찰가: ₩{auction.winningBid.toLocaleString()}</p>
+              <p className="text-blue-500 font-bold">낙찰가: {auction.winningBid.toLocaleString()}원</p>
               <p className="text-gray-500 text-xs">{new Date(auction.winTime).toLocaleString()}</p>
+              <p className="text-red-500 text-sm font-semibold">결제 대기중</p>
             </div>
           ))
         ) : (
