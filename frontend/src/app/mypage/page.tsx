@@ -46,7 +46,7 @@ export default function MyPage() {
   }, [userUUID]);
 
   return (
-    <div className="max-w-2xl mx-auto p-6">
+    <div className="max-w-3xl mx-auto p-6">
       {/* 프로필 정보 */}
       <div className="flex items-center gap-6 p-4 border rounded-lg shadow">
         <div className="w-20 h-20 bg-gray-300 rounded-full overflow-hidden">
@@ -66,20 +66,25 @@ export default function MyPage() {
       <div className="flex flex-col gap-4 mt-4">
         {auctions.length > 0 ? (
           auctions.map((auction) => (
-            <div key={auction.auctionId} className="flex border rounded-lg p-4 shadow gap-4">
-              <div className="w-48 h-48 bg-gray-200 rounded overflow-hidden">
+            <div key={auction.auctionId} className="relative flex border rounded-lg p-4 shadow gap-4">
+              {/* 이미지 영역 (가로 길이 늘리기) */}
+              <div className="w-60 h-40 bg-gray-200 overflow-hidden rounded-lg flex-shrink-0">
                 <img
                   src={auction.imageUrl || "/default-image.jpg"}
                   alt={auction.productName}
-                  className="w-full h-full object-contain"
+                  className="w-full h-full object-cover"
                   onError={(e) => (e.currentTarget.src = "/default-image.jpg")}
                 />
               </div>
-              <div className="flex flex-col justify-center">
+
+              {/* 상품 정보 영역 */}
+              <div className="flex flex-col justify-center flex-1 relative">
+                {/* 오른쪽 상단 결제 대기중 표시 */}
+                <p className="absolute right-2 top-2 text-red-500 text-sm font-semibold">결제 대기중</p>
+
                 <p className="text-lg font-semibold">{auction.productName}</p>
                 <p className="text-sm text-gray-600">{auction.description || "설명 없음"}</p>
                 <p className="text-gray-500 text-sm">{new Date(auction.winTime).toLocaleString()}</p>
-                <p className="text-red-500 text-sm font-semibold">결제 대기중</p>
                 <p className="text-blue-500 font-bold">낙찰가: ₩{auction.winningBid.toLocaleString()}원</p>
               </div>
             </div>
