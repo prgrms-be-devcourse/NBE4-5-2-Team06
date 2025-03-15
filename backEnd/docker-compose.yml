@@ -74,7 +74,7 @@ services:
 
   # 여기에 프론트엔드 서비스 추가
   frontend:
-    build: ./NBE4-5-2-Team06/frontend
+    build: ../../../../frontend
     container_name: next-frontend
     ports:
       - "3000:3000"
