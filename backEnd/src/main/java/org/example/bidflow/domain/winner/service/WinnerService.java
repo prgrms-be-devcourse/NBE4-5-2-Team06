@@ -34,6 +34,7 @@ public class WinnerService {
                         .productName(winner.getAuction().getProduct().getProductName())
                         .winningBid(winner.getWinningBid())
                         .winTime(winner.getWinTime())
+                        .imageUrl(winner.getAuction().getProduct().getImageUrl())
                         .build())
                 .toList();
 

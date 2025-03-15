@@ -13,6 +13,8 @@ public class WinnerCheckResponse {
     private final String productName;
     private final Integer winningBid;
     private final LocalDateTime winTime;
+    private String imageUrl;
+
 
     // Winner 엔티티를 낙찰자 조회 응답을 위한 DTO 로 변환
     public static WinnerCheckResponse from(Winner winner) {
