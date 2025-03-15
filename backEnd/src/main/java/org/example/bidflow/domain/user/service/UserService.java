@@ -109,14 +109,25 @@ public class UserService {
     }
 
     public UserPutRequest updateUser(String userUUID, UserPutRequest request) {
-        User user = getUserByUUID(userUUID); //사용자 조회
+        User user = userRepository.findByUserUUID(userUUID)
+                .orElseThrow(() -> new ServiceException("404", "사용자 정보를 찾을 수 없습니다."));
 
-        user.setProfileImage(request.getProfileImage()); // 변경내용
-        user.setNickname(request.getNickname());    //변경 내용
-        user.setEmail(request.getEmail()); //변경 내용
+        // ✅ null이 아닌 값만 업데이트
+        if (request.getNickname() != null) {
+            user.setNickname(request.getNickname());
+        }
 
-        User updatedUser = userRepository.save(user); //변경 내용을 저장
-        return UserPutRequest.from(updatedUser); //변경 내용이 저장된걸 DTO로 변환
+        if (request.getProfileImage() != null) {
+            user.setProfileImage(request.getProfileImage());
+        }
+
+        // ⚠️ email은 수정 안 하면 null이 들어가므로 주의!
+        // email 수정 기능이 필요 없다면 건드리지 않기
+        if (request.getEmail() != null) {
+            user.setEmail(request.getEmail());
+        }
+
+        return UserPutRequest.from(userRepository.save(user));
     }
 
 }
