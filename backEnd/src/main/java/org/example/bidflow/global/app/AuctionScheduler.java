@@ -64,7 +64,6 @@ public class AuctionScheduler {
 
                 winnerRepository.save(winner);
             }
-
         }
     }
 }
