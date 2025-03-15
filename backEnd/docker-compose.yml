@@ -49,6 +49,7 @@ services:
     restart: always
 
   spring-app:
+#    build: build/generated/sources/annotationProcessor/java/main
     build: .
     container_name: spring-app
     ports:
