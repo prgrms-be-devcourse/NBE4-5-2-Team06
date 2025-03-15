@@ -34,7 +34,7 @@ export function Header() {
   };
 
   // 로컬 스토리지 변경 감지 함수
-  const handleStorageChange = (event) => {
+  const handleStorageChange = (event: StorageEvent) => {
     if (event.key === "accessToken") {
       checkLoginStatus();
     }
@@ -70,7 +70,7 @@ export function Header() {
 
       setIsLoggedIn(false);
       alert("로그아웃 되었습니다.");
-      router.push("/auth/login"); // 로그인 페이지 등으로 이동
+      router.push("/"); // 메인 페이지로 이동
     } catch (error) {
       console.error("로그아웃 실패:", error);
       alert("로그아웃 실패");
