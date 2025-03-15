@@ -63,23 +63,25 @@ export default function MyPage() {
 
       {/* 낙찰 받은 경매 목록 */}
       <h2 className="text-xl font-bold mt-6">낙찰 받은 경매</h2>
-      <div className="grid grid-cols-3 gap-4 mt-4">
+      <div className="flex flex-col gap-4 mt-4">
         {auctions.length > 0 ? (
           auctions.map((auction) => (
-            <div key={auction.auctionId} className="border rounded-lg p-2 shadow">
-              <div className="w-full h-20 bg-gray-200 rounded overflow-hidden">
+            <div key={auction.auctionId} className="flex border rounded-lg p-4 shadow gap-4">
+              <div className="w-48 h-48 bg-gray-200 rounded overflow-hidden">
                 <img
                   src={auction.imageUrl || "/default-image.jpg"}
                   alt={auction.productName}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-contain"
                   onError={(e) => (e.currentTarget.src = "/default-image.jpg")}
                 />
               </div>
-              <p className="text-sm font-semibold mt-2">{auction.productName}</p>
-              <p className="text-xs text-gray-600">{auction.description || "설명 없음"}</p>
-              <p className="text-blue-500 font-bold">낙찰가: {auction.winningBid.toLocaleString()}원</p>
-              <p className="text-gray-500 text-xs">{new Date(auction.winTime).toLocaleString()}</p>
-              <p className="text-red-500 text-sm font-semibold">결제 대기중</p>
+              <div className="flex flex-col justify-center">
+                <p className="text-lg font-semibold">{auction.productName}</p>
+                <p className="text-sm text-gray-600">{auction.description || "설명 없음"}</p>
+                <p className="text-gray-500 text-sm">{new Date(auction.winTime).toLocaleString()}</p>
+                <p className="text-red-500 text-sm font-semibold">결제 대기중</p>
+                <p className="text-blue-500 font-bold">낙찰가: ₩{auction.winningBid.toLocaleString()}원</p>
+              </div>
             </div>
           ))
         ) : (
