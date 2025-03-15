@@ -27,7 +27,7 @@ public class AuctionScheduler {
     private final UserRepository userRepository;
     private final SimpMessagingTemplate simpMessagingTemplate;
 
-    @Scheduled(fixedDelay = 60000)
+    @Scheduled(fixedDelay = 30000)
     public void auctionSchedule() {
 
         // 레디스에서 전체 키를 가져오는 메서드
