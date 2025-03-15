@@ -13,7 +13,6 @@ export default function LoginPage() {
 
   const handleLogin = async (email: string, password: string) => {
     try {
-      const { data, msg } = await loginUser(email, password);
       const { token, userUUID, nickname } = await loginUser(email, password);
 
       localStorage.setItem("accessToken", token);
@@ -21,6 +20,10 @@ export default function LoginPage() {
       localStorage.setItem("nickname", nickname);
 
       setToken(token);
+      
+      // 로그인 상태 변경 이벤트 발생
+      window.dispatchEvent(new Event('login-status-change'));
+      
       alert("로그인 성공!"); // 로그인 성공 메시지
       router.push("/"); // 로그인 성공 시 메인 페이지 이동
     } catch (err: any) {
