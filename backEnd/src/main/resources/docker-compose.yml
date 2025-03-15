@@ -57,7 +57,7 @@ services:
       - redis-master
       - mysql
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/your_database?useSSL=false
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/awsTestDb?useSSL=false
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=pk2258
       - SPRING_REDIS_HOST=redis-master
@@ -67,8 +67,12 @@ services:
       - app-network
     restart: always
 
+#networks:
+#  redis-net:
+#    driver: bridge
+
 networks:
-  redis-net:
+  app-network:
     driver: bridge
 
 volumes:
