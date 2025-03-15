@@ -44,6 +44,15 @@ export default function MyPageEdit() {
   };
 
   const handleSave = async () => {
+    if (!nickname.trim()) {
+      alert("닉네임을 입력해주세요.");
+      return;
+    }
+    if (!email.trim()) {
+      alert("이메일을 입력해주세요.");
+      return;
+    }
+
     const token = getAccessToken();
     const { userUUID } = getUserInfo();
 
