@@ -7,10 +7,14 @@ services:
     ports:
       - "6379:6379"
     command: ["redis-server", "--requirepass", "pk2258"]
+#    networks:
+#      - redis-net
     networks:
-      - redis-net
+      - app-network
+    restart: always
 
-#  redis-slave-1:
+
+  #  redis-slave-1:
 #    image: redis:latest
 #    container_name: redis-slave-1
 #    ports:
@@ -28,6 +32,44 @@ services:
 #    networks:
 #      - redis-net
 
+  mysql:
+    image: mysql:8.0
+    container_name: app-mysql
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=pk2258
+      - MYSQL_DATABASE=awsTestDb
+#      - MYSQL_USER=root
+      - MYSQL_PASSWORD=pk2258
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - app-network
+    restart: always
+
+  spring-app:
+    build: .
+    container_name: spring-app
+    ports:
+      - "8080:8080"
+    depends_on:
+      - redis-master
+      - mysql
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/your_database?useSSL=false
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=pk2258
+      - SPRING_REDIS_HOST=redis-master
+      - SPRING_REDIS_PORT=6379
+      - SPRING_REDIS_PASSWORD=pk2258
+    networks:
+      - app-network
+    restart: always
+
 networks:
   redis-net:
     driver: bridge
+
+volumes:
+  mysql-data:
