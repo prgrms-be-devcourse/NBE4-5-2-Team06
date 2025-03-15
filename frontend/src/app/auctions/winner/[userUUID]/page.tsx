@@ -1,77 +1,111 @@
-// src/app/auctions/winner/[userUUID]/page.tsx
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/Button';
+import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
 
-interface WinnerData {
+interface User {
+  nickname: string;
+  email: string;
+  profileImage?: string;
+}
+
+interface Auction {
   auctionId: number;
   productName: string;
   winningBid: number;
   winTime: string;
+  imageUrl?: string; // imageUrl 속성 추가
 }
 
-export default function AuctionWinnerPage() {
+export default function MyPage() {
   const { userUUID } = useParams();
-  const [winners, setWinners] = useState<WinnerData[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState<User | null>(null);
+  const [auctions, setAuctions] = useState<Auction[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api";
 
   useEffect(() => {
-    const fetchWinnerData = async () => {
-      try {
-        const response = await fetch(`http://localhost:8080/api/auctions/${userUUID}/winner`);
-        if (!response.ok) throw new Error('데이터를 불러오는 데 실패했습니다.');
-        
-        const data = await response.json();
-        console.log('API 응답 데이터:', data); // 데이터 구조 확인
+    if (!userUUID) {
+      setError("사용자 정보를 찾을 수 없습니다.");
+      return;
+    }
 
-        // API 응답이 배열인지 확인 후 설정
-        if (Array.isArray(data)) {
-          setWinners(data);
-        } else if (data?.data && Array.isArray(data.data)) {
-          setWinners(data.data); // 객체 내부의 data 필드에 배열이 있는 경우
-        } else {
-          setWinners([]); // 예외 상황 대비
+    // 사용자 정보 가져오기
+    fetch(`${API_BASE_URL}/auth/users/${userUUID}`)
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`사용자 API 오류: ${res.status}`);
         }
-      } catch (err) {
-        if (err instanceof Error) {
-          setError(err.message);
-        } else {
-          setError('알 수 없는 오류 발생');
-        }
-      } finally {
-        setLoading(false);
-      }
-    };
+        return res.json();
+      })
+      .then((data) => setUser(data.data))
+      .catch((error) => {
+        console.error("사용자 정보 불러오기 오류:", error);
+        setError("사용자 정보를 불러올 수 없습니다.");
+      });
 
-    if (userUUID) fetchWinnerData();
+    // 낙찰 받은 경매 목록 가져오기
+    fetch(`${API_BASE_URL}/auctions/${userUUID}/winner`)
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`낙찰 API 오류: ${res.status}`);
+        }
+        return res.json();
+      })
+      .then((data) => {
+        console.log("받아온 낙찰 데이터:", data);
+        if (!data || !Array.isArray(data.data)) {
+          throw new Error("잘못된 응답 형식");
+        }
+        setAuctions(data.data);
+      })
+      .catch((error) => {
+        console.error("경매 데이터 불러오기 오류:", error);
+        setError("낙찰 정보를 불러올 수 없습니다.");
+      });
   }, [userUUID]);
 
-  if (loading) return <p className="text-center">로딩 중...</p>;
-  if (error) return <p className="text-center text-red-500">오류 발생: {error}</p>;
-  if (winners.length === 0) return <p className="text-center">낙찰된 경매 내역이 없습니다.</p>;
-
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-50 p-4">
-      <Card className="w-full max-w-lg shadow-lg">
-        <CardHeader>
-          <CardTitle className="text-xl">내 낙찰 내역</CardTitle>
-        </CardHeader>
-        <CardContent className="flex flex-col gap-4">
-          {winners.map((winner) => (
-            <div key={winner.auctionId} className="border-b pb-2 mb-2">
-              <p><strong>경매 ID:</strong> {winner.auctionId}</p>
-              <p><strong>상품명:</strong> {winner.productName}</p>
-              <p><strong>낙찰 금액:</strong> {winner.winningBid} 원</p>
-              <p><strong>낙찰 시간:</strong> {new Date(winner.winTime).toLocaleString()}</p>
+    <div className="max-w-2xl mx-auto p-6">
+      {/* 오류 메시지 표시 */}
+      {error && <p className="text-red-500 text-center">{error}</p>}
+
+      {/* 프로필 정보 */}
+      <div className="flex items-center gap-6 p-4 border rounded-lg shadow">
+        <div className="w-20 h-20 bg-gray-300 rounded-full overflow-hidden">
+          {user?.profileImage ? (
+            <img src={user.profileImage} alt="Profile" className="w-full h-full object-cover" />
+          ) : null}
+        </div>
+        <div>
+          <p className="text-lg font-semibold">{user?.nickname || "닉네임"}</p>
+          <p className="text-gray-600">{user?.email || "email@example.com"}</p>
+        </div>
+        <button className="ml-auto px-3 py-2 bg-blue-500 text-white rounded">
+          수정
+        </button>
+      </div>
+
+      {/* 낙찰 받은 경매 목록 */}
+      <h2 className="text-xl font-bold mt-6">낙찰 받은 경매</h2>
+      <div className="grid grid-cols-3 gap-4 mt-4">
+        {auctions.length > 0 ? (
+          auctions.map((auction) => (
+            <div key={auction.auctionId} className="border rounded-lg p-2 shadow">
+              <div className="w-full h-20 bg-gray-200 rounded overflow-hidden">
+                {auction.imageUrl ? (
+                  <img src={auction.imageUrl} alt={auction.productName} className="w-full h-full object-cover" />
+                ) : null}
+              </div>
+              <p className="text-sm font-semibold mt-2">{auction.productName}</p>
+              <p className="text-blue-500 font-bold">₩{auction.winningBid.toLocaleString()}</p>
+              <p className="text-gray-500 text-xs">{new Date(auction.winTime).toLocaleString()}</p>
             </div>
-          ))}
-          <Button onClick={() => window.history.back()}>돌아가기</Button>
-        </CardContent>
-      </Card>
+          ))
+        ) : (
+          <p className="text-gray-500 mt-4">낙찰 받은 경매가 없습니다.</p>
+        )}
+      </div>
     </div>
   );
 }
