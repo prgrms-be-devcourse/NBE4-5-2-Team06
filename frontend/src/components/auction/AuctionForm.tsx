@@ -1,3 +1,4 @@
+// src/components/auction/AuctionForm.tsx
 "use client";
 
 import { useEffect, useState } from "react";
@@ -8,12 +9,14 @@ interface AuctionFormProps {
   highestBid: number; // 현재 최고 입찰가
   minBid: number; // 최소 입찰 단위
   onBid: (amount: number) => void; // 입찰 함수
+  canBid: boolean; // 🔑 버튼 활성화 여부
 }
 
 export default function AuctionForm({
   highestBid,
   minBid,
   onBid,
+  canBid, // ✅ 비활성화 여부 prop 받기
 }: AuctionFormProps) {
   const [amount, setAmount] = useState<number>(highestBid + minBid);
   const [isUserInput, setIsUserInput] = useState<boolean>(false); // 사용자가 직접 입력했는지 여부
@@ -57,18 +60,24 @@ export default function AuctionForm({
         <Button
           className="bg-blue-500 hover:bg-blue-600 text-white flex-1"
           onClick={() => handleIncrease(minBid)}
+          disabled={!canBid} // ✅ 비활성화 여부
+          variant={!canBid ? "secondary" : "default"} // 비활성화 시 회색
         >
           +{minBid.toLocaleString()}원
         </Button>
         <Button
           className="bg-blue-500 hover:bg-blue-600 text-white flex-1"
           onClick={() => handleIncrease(minBid * 10)}
+          disabled={!canBid}
+          variant={!canBid ? "secondary" : "default"}
         >
           +{(minBid * 10).toLocaleString()}원
         </Button>
         <Button
           className="bg-blue-500 hover:bg-blue-600 text-white flex-1"
           onClick={() => handleIncrease(minBid * 100)}
+          disabled={!canBid}
+          variant={!canBid ? "secondary" : "default"}
         >
           +{(minBid * 100).toLocaleString()}원
         </Button>
@@ -81,12 +90,15 @@ export default function AuctionForm({
         onChange={handleInputChange}
         className="w-full text-center"
         placeholder={`${(highestBid + minBid).toLocaleString()}원 이상 입력`}
+        disabled={!canBid} // ✅ 비활성화 여부
       />
 
       {/* 입찰 버튼 */}
       <Button
         onClick={handleBid}
         className="bg-green-600 hover:bg-green-700 text-white w-full"
+        disabled={!canBid} // ✅ 비활성화 여부
+        variant={!canBid ? "secondary" : "default"}
       >
         {amount.toLocaleString()}원 입찰하기
       </Button>

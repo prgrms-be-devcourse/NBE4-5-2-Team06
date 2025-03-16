@@ -87,7 +87,12 @@ public class BidService {
 
         // Redis에서 현재 최고가 조회
         Integer amount = redisCommon.getFromHash(hashKey, "amount", Integer.class);
+        String highestUserUUID = redisCommon.getFromHash(hashKey, "userUUID", String.class); // 현재 최고 입찰자
         int currentBidAmount = (amount != null) ? amount : auction.getStartPrice();     // DB 테스트를 위한 redis에 없으면 시작가로 설정
+
+        if (userUUID.equals(highestUserUUID)) {
+            throw new ServiceException(HttpStatus.BAD_REQUEST.toString(), "이미 최고 입찰자입니다. 다른 사용자의 입찰을 기다려주세요.");
+        }
 
         // 최소 입찰 단위 검증
         validateBidAmount(request.getAmount(), currentBidAmount, auction.getMinBid());
