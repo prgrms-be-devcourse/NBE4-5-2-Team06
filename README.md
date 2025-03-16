@@ -30,7 +30,7 @@
 <br/>
 
 ## 3. 주요 기능
-[✨ 기능 명세서 ✨]([https://github.com/prgrms-be-devcourse/NBE4-5-2-Team06/wiki](https://github.com/prgrms-be-devcourse/NBE4-5-2-Team06/wiki/%E2%9A%A1%EF%B8%8F-%EA%B8%B0%EB%8A%A5-%EB%AA%85%EC%84%B8%EC%84%9C-%E2%9A%A1%EF%B8%8F))
+[✨ 기능 명세서 ✨](https://github.com/prgrms-be-devcourse/NBE4-5-2-Team06/wiki/%E2%9A%A1%EF%B8%8F-%EA%B8%B0%EB%8A%A5-%EB%AA%85%EC%84%B8%EC%84%9C-%E2%9A%A1%EF%B8%8F)<br/>
 [✅ Redis가 적용된 기능의 Process ✅](https://github.com/prgrms-be-devcourse/NBE4-5-2-Team06/wiki/%E2%9C%85-Redis%EA%B0%80-%EC%A0%81%EC%9A%A9%EB%90%9C-%EA%B8%B0%EB%8A%A5%EC%9D%98-Process)
  
 <br/>
