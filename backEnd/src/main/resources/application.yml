@@ -16,7 +16,7 @@ spring:
       fail-on-empty-beans: false
 
   datasource:
-    url: jdbc:mysql://mysql:3306/awsTestDb?useSSL=false
+    url: jdbc:mysql://mysql:3306/awsTestDb?useSSL=false&allowPublicKeyRetrieval=true
     username: root
     password: pk2258
     driver-class-name: com.mysql.cj.jdbc.Driver
