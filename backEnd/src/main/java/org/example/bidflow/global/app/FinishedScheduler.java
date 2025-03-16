@@ -17,7 +17,7 @@ public class FinishedScheduler {
     private final RedisCommon redisCommon;
     private final AuctionRepository auctionRepository;
 
-    @Scheduled(fixedDelay = 60000)
+    @Scheduled(fixedDelay = 30000)
     public void finishedSchedule() {
 
         Set<String> keys = redisCommon.getAllKeys();
