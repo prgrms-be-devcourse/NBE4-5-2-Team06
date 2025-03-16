@@ -108,6 +108,7 @@
 
 
 ## ERD
+![image](https://github.com/user-attachments/assets/0b2cbdbc-453f-42c6-887f-2ebd5da7b191)
 
 ## System Architecture
 
