@@ -56,7 +56,7 @@ services:
       - redis-master
       - mysql
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/awsTestDb?useSSL=false
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/awsTestDb?useSSL=false&allowPublicKeyRetrieval=true
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=pk2258
       - SPRING_REDIS_HOST=redis-master
