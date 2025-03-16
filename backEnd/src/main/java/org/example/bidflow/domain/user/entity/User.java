@@ -32,7 +32,7 @@ public class User {
     @Column(name = "PASSWORD", nullable = false)
     private String password;
 
-    @Column(name = "profileImage")
+    @Column(name = "profileImage" ,columnDefinition = "TEXT")
     private String profileImage;
 
     @Builder.Default
@@ -55,15 +55,15 @@ public class User {
     @Builder.Default
     private List<Bid> bids = new ArrayList<>();
 
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
+public void setNickname(String nickname) {
+    this.nickname = nickname;
+}
 
-    public void setProfileImage(String profileImage) {
-        this.profileImage = profileImage;
-    }
-    public void setEmail(String email) {
-        this.email = email;
-    }
+public void setProfileImage(String profileImage) {
+    this.profileImage = profileImage;
+}
+public void setEmail(String email) {
+    this.email = email;
+}
 
 }
