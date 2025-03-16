@@ -20,10 +20,7 @@ export default function AuctionPage() {
   const [error, setError] = useState("");
   const [timeLeft, setTimeLeft] = useState<{ [key: number]: string }>({});
 
-  useEffect(() => {
-    fetchAuctions();
-  }, []);
-
+  // ✅ 경매 데이터 불러오기 (Polling 포함)
   const fetchAuctions = async () => {
     setLoading(true);
     setError("");
@@ -39,6 +36,19 @@ export default function AuctionPage() {
     }
   };
 
+  // ✅ 최초 호출 및 주기적 갱신
+  useEffect(() => {
+    fetchAuctions(); // 최초 호출
+
+    const interval = setInterval(() => {
+      console.log("🔄 메인 페이지 경매 목록 갱신 중...");
+      fetchAuctions(); // 주기적 갱신
+    }, 5000); // 5초마다
+
+    return () => clearInterval(interval); // 언마운트 시 해제
+  }, []);
+
+  // ✅ 남은 시간 계산
   useEffect(() => {
     const interval = setInterval(() => {
       const updatedTimes: { [key: number]: string } = {};
@@ -59,20 +69,14 @@ export default function AuctionPage() {
 
         const diff = targetTime.diff(now);
         const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-        const hours = Math.floor(
-          (diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-        );
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((diff % (1000 * 60)) / 1000);
 
         if (days > 0) {
-          updatedTimes[
-            auction.auctionId
-          ] = `${days}일 ${hours}시간 ${minutes}분 ${seconds}초`;
+          updatedTimes[auction.auctionId] = `${days}일 ${hours}시간 ${minutes}분 ${seconds}초`;
         } else {
-          updatedTimes[
-            auction.auctionId
-          ] = `${hours}시간 ${minutes}분 ${seconds}초`;
+          updatedTimes[auction.auctionId] = `${hours}시간 ${minutes}분 ${seconds}초`;
         }
       });
 
@@ -82,13 +86,12 @@ export default function AuctionPage() {
     return () => clearInterval(interval);
   }, [auctions]);
 
+  // 필터링
   const now = dayjs();
   const ongoingAuctions = auctions.filter(
     (a) => now.isAfter(dayjs(a.startTime)) && now.isBefore(dayjs(a.endTime))
   );
-  const upcomingAuctions = auctions.filter((a) =>
-    now.isBefore(dayjs(a.startTime))
-  );
+  const upcomingAuctions = auctions.filter((a) => now.isBefore(dayjs(a.startTime)));
 
   return (
     <div className="p-8 space-y-8">
@@ -109,6 +112,7 @@ export default function AuctionPage() {
   );
 }
 
+// ✅ 경매 리스트 섹션
 const AuctionSection = ({
   title,
   auctions,
@@ -137,6 +141,7 @@ const AuctionSection = ({
   </div>
 );
 
+// ✅ 경매 카드
 const AuctionCard = ({
   auction,
   timeLeft,
@@ -170,12 +175,12 @@ const AuctionCard = ({
         </div>
       )}
 
-      <p
-        className={`mt-2 ${
-          isOngoing ? "text-red-600 font-bold" : "text-gray-600"
-        }`}
-      >
-        현재가: {auction.currentBid?.toLocaleString()}원
+      <p className={`mt-2 ${isOngoing ? "text-red-600 font-bold" : "text-gray-600"}`}>
+        {/* ✅ 현재 입찰가 없으면 시작가 대체 표시 */}
+        현재가:{" "}
+        {auction.currentBid !== undefined && auction.currentBid > 0
+          ? `${auction.currentBid.toLocaleString()}원`
+          : `${auction.startPrice?.toLocaleString()}원`}
       </p>
 
       <p className="text-gray-500 text-sm mt-2">
@@ -210,6 +215,7 @@ const AuctionCard = ({
   </Card>
 );
 
+// ✅ 남은 시간 위험 여부 체크
 const checkDangerTime = (timeStr: string | undefined): boolean => {
   if (!timeStr) return false;
   if (timeStr.includes("일")) return false;

@@ -20,16 +20,18 @@ export const SignUpForm = () => {
   const router = useRouter();
 
   useEffect(() => {
-    let countdown;
+    let countdown: ReturnType<typeof setInterval> | null = null;
     if (showVerificationInput && timer > 0 && !isVerified) {
       countdown = setInterval(() => setTimer((prev) => prev - 1), 1000);
     } else if (timer === 0 && !isVerified) {
       setIsBlocked(true);
-      clearInterval(countdown);
+      if (countdown) clearInterval(countdown);
     } else if (isVerified) {
-      clearInterval(countdown);
+      if (countdown) clearInterval(countdown);
     }
-    return () => clearInterval(countdown);
+    return () => {
+      if (countdown) clearInterval(countdown);
+    };
   }, [showVerificationInput, timer, isVerified]);
 
   const handleEmailVerification = async () => {
@@ -41,8 +43,12 @@ export const SignUpForm = () => {
         setIsBlocked(false);
         alert(response.data.msg);
       }
-    } catch (err) {
-      setError(err.response?.data?.msg || "이메일 전송에 실패했습니다.");
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err)) {
+        setError(err.response?.data?.msg || "이메일 전송에 실패했습니다.");
+      } else {
+        setError("알 수 없는 오류가 발생했습니다.");
+      }
     }
   };
 
@@ -55,11 +61,14 @@ export const SignUpForm = () => {
       } else {
         setError(response.data.msg);
       }
-    } catch (err) {
-      setError(err.response?.data?.msg || "인증 확인에 실패했습니다.");
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err)) {
+        setError(err.response?.data?.msg || "인증 확인에 실패했습니다.");
+      } else {
+        setError("알 수 없는 오류가 발생했습니다.");
+      }
     }
   };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
