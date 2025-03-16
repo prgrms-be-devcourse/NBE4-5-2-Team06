@@ -22,13 +22,11 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    // 보안 필터 체인 설정
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtAuthenticationFilter jwtAuthenticationFilter) throws Exception {
         http
-                .cors() // CORS 활성화
-                .and()
-                .csrf().disable() // CSRF 비활성화
+                .cors(cors -> cors.disable()) // CORS 설정 (필요 시 disable 또는 설정)
+                .csrf(csrf -> csrf.disable()) // CSRF 설정
                 .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable)) // H2 콘솔을 위한 iframe 허용
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Preflight 요청 허용
@@ -43,4 +41,5 @@ public class SecurityConfig {
 
         return http.build();
     }
+
 }
