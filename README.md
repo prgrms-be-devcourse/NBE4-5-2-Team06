@@ -8,9 +8,9 @@
 
 |                                           문권이                                           |                                        박종서                                          |                                                        박종현                                                        |                                          서세훈                                           |                                                        조현우                                                        
 |:---------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------:|:-----------------------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------:|:-----------------------------------------------------------------------------------------------------------------:|
-| <img src="" alt="문권이" width="150"> | <img src="" alt="박종서" width="150"> | <img src="" alt="박종현" width="150"> | <img src="" alt="서세훈" width="150"> | <img src="" alt="조현우" width="150"> |
+| <img src="https://avatars.githubusercontent.com/u/102517739?v=4" alt="문권이" width="150"> | <img src="https://avatars.githubusercontent.com/u/184979256?v=4" alt="박종서" width="150"> | <img src="https://avatars.githubusercontent.com/u/149856960?v=4" alt="박종현" width="150"> | <img src="https://avatars.githubusercontent.com/u/113406474?v=4" alt="서세훈" width="150"> | <img src="https://avatars.githubusercontent.com/u/151692425?v=4" alt="조현우" width="150"> |
 |                                         PM/TL                                         |                                           TM                                          |                                                        TM                                                         |                                           TM                                          |                                                       TM                                                         |
-|                          [GitHub]()                          |                         [GitHub]()                          |                                        [GitHub]()                                        |                         [GitHub]()                          |                                                    [GitHub]()                                                     |
+|                          [GitHub](https://github.com/M00NPANG)                          |                         [GitHub](https://github.com/csjsseo)                          |                                        [GitHub](https://github.com/joungGo)                                        |                         [GitHub](https://github.com/sehun-Seo3)                          |                                                    [GitHub](https://github.com/ChoHyunWoo)                                                     |
 
 <br/>
 <br/>
@@ -35,10 +35,10 @@
    |     |                                                                                         |                                                                                                  |
    |-----|-----------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------|
    | 문권이 | <img src="https://avatars.githubusercontent.com/u/102517739?v=4" alt="문권이" width="100"> | <ul></ul> |
-   |  | <img src="">  | <ul></ul>|
-   |  | <img src="" alt="" width="100"> | <ul></ul>|
-   |  | <img src="" alt="" width="100">  | <ul></ul>|
-   |  | <img src="" alt="" width="100">  | <ul></ul> |
+   | 박종서 | <img src="https://avatars.githubusercontent.com/u/184979256?v=4" alt="박종서" width="100">  | <ul></ul>|
+   | 박종현 | <img src="https://avatars.githubusercontent.com/u/149856960?v=4" alt="박종현" width="100"> | <ul></ul>|
+   | 서세훈 | <img src="https://avatars.githubusercontent.com/u/113406474?v=4" alt="서세훈" width="100">  | <ul></ul>|
+   | 조현우 | <img src="https://avatars.githubusercontent.com/u/151692425?v=4" alt="조현우" width="100">  | <ul></ul> |
 
 <br/>
 <br/>
