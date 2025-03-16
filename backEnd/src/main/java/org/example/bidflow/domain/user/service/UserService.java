@@ -99,10 +99,10 @@ public class UserService {
         Map<String, Object> claims = new HashMap<>();
         claims.put("userUUID", user.getUserUUID());
         claims.put("nickname", user.getNickname());
-        claims.put("role", user.getRole());
+        claims.put("role", "ROLE_" + user.getRole());
 
         // JWT 토큰 생성
-        String token = jwtProvider.generateToken(claims);
+        String token = jwtProvider.generateToken(claims,request.getEmail());
 
         // 응답 객체 생성 및 반환
         return UserSignInResponse.from(user, token);

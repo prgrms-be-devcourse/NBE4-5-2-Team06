@@ -33,16 +33,31 @@ export default function MyPage() {
     console.log("현재 userUUID 값:", uuid);
 
     // 사용자 정보 가져오기
-    fetch(`${API_BASE_URL}/auth/users/${uuid}`)
-      .then((res) => res.ok ? res.json() : null)
-      .then((data) => data?.data && setUser(data.data))
-      .catch(console.error);
+    const token = localStorage.getItem('accessToken'); // 또는 사용 중인 토큰 저장 방식에 맞게 가져오기
 
-    // 낙찰 받은 경매 목록 가져오기
-    fetch(`${API_BASE_URL}/auctions/${uuid}/winner`)
-      .then((res) => res.ok ? res.json() : null)
-      .then((data) => data?.data && Array.isArray(data.data) ? setAuctions(data.data) : [])
-      .catch(console.error);
+// 유저 정보 가져오기
+fetch(`${API_BASE_URL}/auth/users/${uuid}`, {
+  method: 'GET',
+  headers: {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${token}`,
+  },
+})
+  .then((res) => res.ok ? res.json() : null)
+  .then((data) => data?.data && setUser(data.data))
+  .catch(console.error);
+
+// 낙찰 받은 경매 목록 가져오기
+fetch(`${API_BASE_URL}/auctions/${uuid}/winner`, {
+  method: 'GET',
+  headers: {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${token}`,
+  },
+})
+  .then((res) => res.ok ? res.json() : null)
+  .then((data) => data?.data && Array.isArray(data.data) ? setAuctions(data.data) : [])
+  .catch(console.error);
   }, [userUUID]);
 
   return (
