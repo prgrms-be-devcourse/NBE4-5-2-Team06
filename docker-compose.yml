@@ -6,7 +6,7 @@ services:
     container_name: core-master
     ports:
       - "6379:6379"
-    command: ["redis-server", "--requirepass", "pk2258"]
+    command: ["redis-server", "--requirepass", "${REDIS_PASSWORD}"]
 #    networks:
 #      - redis-net
     networks:
@@ -18,7 +18,7 @@ services:
 #    container_name: redis-slave-1
 #    ports:
 #      - "6380:6379"
-#    command: ["redis-server", "--slaveof", "redis-master", "6379", "--requirepass", "pk2258", "--masterauth", "pk2258", "--repl-ping-replica-period", "10", "--repl-timeout", "60"]
+#    command: ["redis-server", "--slaveof", "redis-master", "6379", "--requirepass", "${REDIS_PASSWORD}", "--masterauth", "${REDIS_PASSWORD}", "--repl-ping-replica-period", "10", "--repl-timeout", "60"]
 #    networks:
 #      - redis-net
 
@@ -27,7 +27,7 @@ services:
 #    container_name: redis-slave-2
 #    ports:
 #      - "6381:6379"
-#    command: ["redis-server", "--slaveof", "redis-master", "6379", "--requirepass", "pk2258", "--masterauth", "pk2258", "--repl-ping-replica-period", "10", "--repl-timeout", "60"]
+#    command: ["redis-server", "--slaveof", "redis-master", "6379", "--requirepass", "${REDIS_PASSWORD}", "--masterauth", "${REDIS_PASSWORD}", "--repl-ping-replica-period", "10", "--repl-timeout", "60"]
 #    networks:
 #      - redis-net
 
@@ -37,10 +37,10 @@ services:
     ports:
       - "3306:3306"
     environment:
-      - MYSQL_ROOT_PASSWORD=pk2258
-      - MYSQL_DATABASE=awsTestDb
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
 #      - MYSQL_USER=root
-      - MYSQL_PASSWORD=pk2258
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
     volumes:
       - mysql-data:/var/lib/mysql
     networks:
@@ -56,12 +56,12 @@ services:
       - redis-master
       - mysql
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/awsTestDb?useSSL=false&allowPublicKeyRetrieval=true
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/${MYSQL_DATABASE}?useSSL=false&allowPublicKeyRetrieval=true
       - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=pk2258
+      - SPRING_DATASOURCE_PASSWORD=${MYSQL_ROOT_PASSWORD}
       - SPRING_REDIS_HOST=redis-master
       - SPRING_REDIS_PORT=6379
-      - SPRING_REDIS_PASSWORD=pk2258
+      - SPRING_REDIS_PASSWORD=${REDIS_PASSWORD}
     networks:
       - app-network
 
