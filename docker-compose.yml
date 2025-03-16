@@ -11,7 +11,6 @@ services:
 #      - redis-net
     networks:
       - app-network
-    restart: always
 
 
   #  redis-slave-1:
@@ -46,7 +45,6 @@ services:
       - mysql-data:/var/lib/mysql
     networks:
       - app-network
-    restart: always
 
   spring-app:
 #    build: build/generated/sources/annotationProcessor/java/main
@@ -66,7 +64,6 @@ services:
       - SPRING_REDIS_PASSWORD=pk2258
     networks:
       - app-network
-    restart: always
 
 #networks:
 #  redis-net:
@@ -80,7 +77,6 @@ services:
       - "3000:3000"
     networks:
       - app-network
-    restart: always
 
 networks:
   app-network:
