@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
+import { getAccessToken } from "@/lib/api/auth";
 
 interface User {
   nickname: string;
@@ -32,14 +33,20 @@ export default function MyPage() {
 
     console.log("현재 userUUID 값:", uuid);
 
+    const token = getAccessToken();
+    const headers = {
+      Authorization: `Bearer ${token}`,
+      "Content-Type":"application/json"
+    };
+
     // 사용자 정보 가져오기
-    fetch(`${API_BASE_URL}/auth/users/${uuid}`)
+    fetch(`${API_BASE_URL}/auth/users/${uuid}`, {headers})
       .then((res) => res.ok ? res.json() : null)
       .then((data) => data?.data && setUser(data.data))
       .catch(console.error);
 
     // 낙찰 받은 경매 목록 가져오기
-    fetch(`${API_BASE_URL}/auctions/${uuid}/winner`)
+    fetch(`${API_BASE_URL}/auctions/${uuid}/winner`, {headers})
       .then((res) => res.ok ? res.json() : null)
       .then((data) => data?.data && Array.isArray(data.data) ? setAuctions(data.data) : [])
       .catch(console.error);
