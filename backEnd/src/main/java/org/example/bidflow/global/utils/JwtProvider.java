@@ -18,10 +18,11 @@ public class JwtProvider {
 
 
     // JWT 토큰을 생성하는 메서드
-    public String generateToken(Map<String, Object> claims) {
+    public String generateToken(Map<String, Object> claims,String email) {
 
         return Jwts.builder()
                 .setClaims(claims) // 사용자 정보 포함
+                .setSubject(email)  // // subject에 이메일 저장
                 .setIssuedAt(new Date()) // 발급 시간 설정
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME)) // 만료 시간 설정
                 .signWith(secretKey, SignatureAlgorithm.HS256) // 서명 알고리즘 적용
@@ -70,5 +71,10 @@ public class JwtProvider {
             // 예외 발생 시 잘못된 토큰, 만료된 토큰 등
             return false; // 검증 실패 (잘못된 토큰)
         }
+    }
+
+    // JWT에서 username (subject) 추출
+    public String getUsername(String token) {
+        return parseClaims(token).getSubject();
     }
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { getAccessToken } from "@/lib/api/auth";
 
 interface User {
@@ -21,6 +21,7 @@ interface Auction {
 
 export default function MyPage() {
   const { userUUID } = useParams();
+  const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
   const [auctions, setAuctions] = useState<Auction[]>([]);
   const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api";
@@ -63,7 +64,10 @@ export default function MyPage() {
           <p className="text-lg font-semibold">{user?.nickname || "닉네임"}</p>
           <p className="text-gray-600">{user?.email || "email@example.com"}</p>
         </div>
-        <button className="ml-auto px-3 py-2 bg-blue-500 text-white rounded">
+        <button 
+          className="ml-auto px-3 py-2 bg-blue-500 text-white rounded"
+          onClick={() => router.push("/mypage/edit")}
+        >
           수정
         </button>
       </div>
