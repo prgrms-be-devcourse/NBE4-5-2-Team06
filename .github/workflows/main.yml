@@ -4,9 +4,6 @@ on:
   push:  # master 브랜치로의 푸시 이벤트 발생 시 워크플로우 실행
     branches:
       - main
-  pull_request:  # master 브랜치로의 풀 리퀘스트 이벤트 발생 시 워크플로우 실행
-    branches:
-      - main
 
 jobs:
   build:  # build라는 이름의 job 정의
@@ -36,7 +33,9 @@ jobs:
           restore-keys: ${{ runner.os }}-gradle  # 캐시 복원 키
 
       - name: Build with Gradle  # Step 4: Gradle로 프로젝트 빌드
-        run: ./backEnd/gradlew clean build  # Gradle의 clean 및 build 명령 실행
+        run:
+          chmod +x ./backEnd/gradlew
+          ./backEnd/gradlew clean build  # Gradle의 clean 및 build 명령 실행
 
       - name: Login to Docker Hub  # Step 5: Docker Hub 로그인
         run: docker login -u "${{ secrets.DOCKER_USERNAME }}" -p "${{ secrets.DOCKER_PASSWORD }}"  # GitHub Secrets에서 저장한 Docker 자격 증명 사용
