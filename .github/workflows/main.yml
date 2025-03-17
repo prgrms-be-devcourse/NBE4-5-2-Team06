@@ -1,0 +1,65 @@
+name: CI/CD Pipeline  # GitHub Actions 워크플로우의 이름
+
+on:
+  push:  # master 브랜치로의 푸시 이벤트 발생 시 워크플로우 실행
+    branches:
+      - master
+  pull_request:  # master 브랜치로의 풀 리퀘스트 이벤트 발생 시 워크플로우 실행
+    branches:
+      - master
+
+jobs:
+  build:  # build라는 이름의 job 정의
+    runs-on: ubuntu-latest  # 최신 버전의 Ubuntu에서 실행
+
+    steps:  # job을 구성하는 단계들 정의
+      - name: Checkout repository  # Step 1: 코드 저장소 체크아웃
+        uses: actions/checkout@v3  # 최신 버전(v3)의 checkout 액션 사용
+
+      - name: JDK 21 설정  # Step 2: JDK 21 설정
+        uses: actions/setup-java@v4  # 버전 4의 setup-java 액션 사용
+        with:
+          java-version: '21'  # JDK 21 버전 지정
+          distribution: 'temurin'  # Temurin 배포판 사용
+          java-package: 'jdk'  # JDK 패키지 설치
+          check-latest: false  # 최신 버전 확인 안 함
+          server-id: 'github'  # GitHub 서버 ID 설정
+          server-username: ${{ github.actor }}  # GitHub 액터의 사용자 이름 사용
+          server-password: ${{ secrets.GITHUB_TOKEN }}  # GitHub 토큰 사용
+          overwrite-settings: true  # 기존 설정 덮어쓰기
+
+      - name: Cache Gradle packages  # Step 3: Gradle 패키지 캐시
+        uses: actions/cache@v3  # 최신 버전(v3)의 캐싱 액션 사용
+        with:
+          path: ~/.gradle  # Gradle 패키지의 캐시 경로
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}  # Gradle 파일의 해시를 기반으로한 캐시 키
+          restore-keys: ${{ runner.os }}-gradle  # 캐시 복원 키
+
+      - name: Build with Gradle  # Step 4: Gradle로 프로젝트 빌드
+        run: ./gradlew clean build  # Gradle의 clean 및 build 명령 실행
+
+      - name: Login to Docker Hub  # Step 5: Docker Hub 로그인
+        run: docker login -u "${{ secrets.DOCKER_USERNAME }}" -p "${{ secrets.DOCKER_PASSWORD }}"  # GitHub Secrets에서 저장한 Docker 자격 증명 사용
+
+      - name: Build Docker image  # Step 6: 어플리케이션용 Docker 이미지 빌드
+        run: |
+          docker build . -t ${{ secrets.DOCKER_USERNAME }}/BE5SecondProjectAuction:${{ github.sha }}  # GitHub SHA로 태그한 Docker 이미지 빌드
+          docker tag ${{ secrets.DOCKER_USERNAME }}/BE5SecondProjectAuction:${{ github.sha }} ${{ secrets.DOCKER_USERNAME }}/BE5SecondProjectAuction:latest  # Docker 이미지를 'latest'로 태그
+
+      - name: Push Docker image to Docker Hub  # Step 7: Docker 이미지를 Docker Hub에 푸시
+        run: |
+          docker push ${{ secrets.DOCKER_USERNAME }}/BE5SecondProjectAuction:${{ github.sha }}  # GitHub SHA로 태그된 Docker 이미지 푸시
+          docker push ${{ secrets.DOCKER_USERNAME }}/BE5SecondProjectAuction:latest  # 'latest' Docker 이미지 푸시
+
+      - name: Deploy to server  # Step 8: 서버에 어플리케이션 배포
+        uses: appleboy/ssh-action@v1.0.3  # SSH 액션(v1.0.3)을 사용하여 SSH로 배포
+        with:
+          host: ${{ secrets.DEPLOY_SERVER }}  # GitHub Secrets에서 저장한 서버 호스트명 또는 IP 주소 사용
+          username: ${{ secrets.SSH_USER }}  # GitHub Secrets에서 저장한 SSH 사용자 이름 사용
+          key: ${{ secrets.SSH_PRIVATE_KEY }}  # GitHub Secrets에서 저장한 SSH 개인 키 사용
+          port: 22  # SSH 포트
+          script: |
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/BE5SecondProjectAuction:${{ github.sha }}  # 특정 태그의 Docker 이미지 풀
+            sudo docker stop BE5SecondProjectAuction || true  # 실행 중인 Docker 컨테이너 중지 (오류 무시)
+            sudo docker rm BE5SecondProjectAuction || true  # Docker 컨테이너 삭제 (오류 무시)
+            sudo docker run -d -p 8080:8080 --network app-network --name BE5SecondProjectAuction ${{ secrets.DOCKER_USERNAME }}/BE5SecondProjectAuction:${{ github.sha }}  # 지정된 옵션으로 Docker 컨테이너 실행
