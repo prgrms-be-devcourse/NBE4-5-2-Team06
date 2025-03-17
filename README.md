@@ -100,8 +100,11 @@
 ![image](https://github.com/user-attachments/assets/0b2cbdbc-453f-42c6-887f-2ebd5da7b191)
 
 ## System Architecture
+![image](https://github.com/user-attachments/assets/e61edb51-05f2-4cbc-bdac-2539bd9ad81a)
+
 
 ## Sequence Diagram
+[[sequenceDiagram] 06팀_2차 팀프로젝트.pdf](https://github.com/user-attachments/files/19291195/sequenceDiagram.06._2.pdf)
 
 
 ## 브랜치 전략
