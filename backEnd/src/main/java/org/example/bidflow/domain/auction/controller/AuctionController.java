@@ -28,10 +28,8 @@ public class AuctionController {
 
     // Explain: FE 에서 FINISHED 상태로 변경시 요청할 엔드포인트 경로
     @PostMapping("/{auctionId}/close")
-    public /*ResponseEntity<RsData<WinnerResponseDto>>*/void  closeAuction(@PathVariable Long auctionId) {
+    public void  closeAuction(@PathVariable Long auctionId) {
         auctionService.closeAuction(auctionId);
-        /* RsData<WinnerResponseDto> response = new RsData<>("200-SUCCESS", "경매가 성공적으로 종료되었습니다.", winner);
-        return ResponseEntity.status(HttpStatus.OK).body(response);*/
     }
 
     // 특정 경매 상세 조회 컨트롤러

@@ -13,6 +13,7 @@ public class AuctionAdminResponse {
     private Long auctionId;
     private String productName;
     private String imageUrl;
+    private Integer startPrice;
     private Integer currentPrice;
     private String status;
     private LocalDateTime startTime;
@@ -21,12 +22,13 @@ public class AuctionAdminResponse {
     private Integer winningBid; // "FINISHED" 상태일 경우 포함
     private LocalDateTime winTime; // "FINISHED" 상태일 경우 포함
 
-    public static AuctionAdminResponse from(Auction auction) {
+    public static AuctionAdminResponse from(Auction auction, Integer currentPrice) {
         AuctionAdminResponse.AuctionAdminResponseBuilder builder = AuctionAdminResponse.builder()
                 .auctionId(auction.getAuctionId())
                 .productName(auction.getProduct().getProductName())  // 상품명
                 .imageUrl(auction.getProduct().getImageUrl())        // 이미지 URL
-                .currentPrice(auction.getStartPrice()) // 현재 가격
+                .startPrice(auction.getStartPrice())    // 시작 가격
+                .currentPrice(currentPrice) // 현재 가격
                 .status(auction.getStatus().name())  // Enum 직접 사용
                 .startTime(auction.getStartTime())   // 시작 시간
                 .endTime(auction.getEndTime());      // 종료 시간

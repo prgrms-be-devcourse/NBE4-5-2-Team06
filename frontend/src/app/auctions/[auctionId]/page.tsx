@@ -1,3 +1,4 @@
+// src/app/auctions/[auctionId]/page.tsx
 "use client";
 
 import { useEffect, useRef, useState } from "react";
@@ -11,26 +12,19 @@ import {
 import { getAuctionDetail } from "@/lib/api/auction";
 import AuctionForm from "@/components/auction/AuctionForm";
 import AuctionChat from "@/components/auction/AuctionChat";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter
+} from "@/components/ui/dialog";
 import { Client } from "@stomp/stompjs";
+import { Button } from "@/components/ui/button";
 
-interface Message {
-  id: number;
-  sender: string;
-  text: string;
-  isMe: boolean;
-}
-
-interface Auction {
-  product: {
-    name: string;
-    imageUrl: string;
-    description: string;
-  };
-  startPrice: number;
-  currentBid: number;
-  minBid: number;
-  endTime: string;
-}
+interface Message { id: number; sender: string; text: string; isMe: boolean; }
+interface AuctionEndMessage { auctionId: number; winnerNickname: string; winningBid: number; }
+interface Auction { product: { name: string; imageUrl: string; description: string; }; startPrice: number; currentBid: number; minBid: number; endTime: string; }
 
 export default function AuctionPage() {
   const { auctionId } = useParams() as { auctionId: string };
@@ -39,6 +33,9 @@ export default function AuctionPage() {
   const [auction, setAuction] = useState<Auction | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [timeLeft, setTimeLeft] = useState<string>("");
+  const [auctionEndData, setAuctionEndData] = useState<AuctionEndMessage | null>(null);
+  const [showEndDialog, setShowEndDialog] = useState(false);
+  const [canBid, setCanBid] = useState(true); // ✅ 버튼 비활성화 제어
 
   const chatContainerRef = useRef<HTMLDivElement | null>(null);
   const [client, setClient] = useState<Client | null>(null);
@@ -46,6 +43,7 @@ export default function AuctionPage() {
   const token = typeof window !== "undefined" ? localStorage.getItem("accessToken") || "" : "";
   const myNickname = typeof window !== "undefined" ? localStorage.getItem("nickname") || "" : "";
 
+  // 로그인 체크
   useEffect(() => {
     if (!token) {
       alert("로그인이 필요합니다.");
@@ -53,6 +51,7 @@ export default function AuctionPage() {
     }
   }, [token, router]);
 
+  // 웹소켓 연결 및 메시지 수신
   useEffect(() => {
     if (!token || !auctionId) return;
 
@@ -62,25 +61,27 @@ export default function AuctionPage() {
     subscribeToAuction(stompClient, auctionId, (msg) => {
       console.log("[AuctionPage] 웹소켓 메시지 수신:", msg);
 
+      if (msg.winnerNickname && msg.winningBid !== undefined) {
+        setAuctionEndData(msg);
+        setShowEndDialog(true);
+        return;
+      }
+
       setMessages((prev) => {
         if (prev.some((m) => m.text === `${msg.currentBid.toLocaleString()}원 입찰!`)) return prev;
-        return [
-          ...prev,
-          {
-            id: Date.now(),
-            sender: msg.nickname || "익명",
-            text: `${msg.currentBid.toLocaleString()}원 입찰!`,
-            isMe: msg.nickname === myNickname,
-          },
-        ];
+        return [...prev, { id: Date.now(), sender: msg.nickname || "익명", text: `${msg.currentBid.toLocaleString()}원 입찰!`, isMe: msg.nickname === myNickname }];
       });
 
       setAuction((prev: Auction | null) => (prev ? { ...prev, currentBid: msg.currentBid } : prev));
+
+      // ✅ 다른 사용자가 입찰하면 다시 활성화
+      if (msg.nickname !== myNickname) setCanBid(true);
     });
 
     return () => disconnectStomp();
   }, [token, auctionId, myNickname]);
 
+  // 경매 상세 조회
   useEffect(() => {
     (async () => {
       const data = await getAuctionDetail(auctionId);
@@ -91,6 +92,7 @@ export default function AuctionPage() {
     })();
   }, [auctionId]);
 
+  // 남은 시간 계산
   useEffect(() => {
     if (!auction?.endTime) return;
     const interval = setInterval(() => calculateTimeLeft(auction.endTime), 1000);
@@ -109,19 +111,14 @@ export default function AuctionPage() {
     const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
     const seconds = Math.floor((diff % (1000 * 60)) / 1000);
 
-    setTimeLeft(
-      days > 0
-        ? `${days}일 ${hours}시 ${minutes}분 ${seconds}초 남음`
-        : `${hours}시 ${minutes}분 ${seconds}초 남음`
-    );
+    setTimeLeft(days > 0 ? `${days}일 ${hours}시 ${minutes}분 ${seconds}초 남음` : `${hours}시 ${minutes}분 ${seconds}초 남음`);
   };
 
   useEffect(() => {
-    if (chatContainerRef.current) {
-      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
-    }
+    if (chatContainerRef.current) chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
   }, [messages.length]);
 
+  // 입찰
   const handleBid = async (amount: number) => {
     const userUUID = localStorage.getItem("userUUID") || "";
     if (!userUUID) return alert("로그인이 필요합니다.");
@@ -133,38 +130,43 @@ export default function AuctionPage() {
     }
 
     console.log("[AuctionPage] 입찰 메시지 전송 시도:", { auctionId, userUUID, amount });
-
     sendAuctionMessage("/app/auction/bid", { auctionId, amount }, token);
-
-    setAuction((prev: Auction | null) => (prev ? { ...prev, currentBid: amount } : prev));
+    setCanBid(false); // ✅ 내가 입찰하면 비활성화
   };
+
+  const timeLeftColor = timeLeft !== "경매 종료" && auction && new Date(auction.endTime).getTime() - new Date().getTime() <= 5 * 60 * 1000
+    ? "text-red-500" : "text-blue-600";
 
   if (!auction) return <p>Loading...</p>;
 
-  const timeLeftColor = timeLeft !== "경매 종료" && new Date(auction.endTime).getTime() - new Date().getTime() <= 5 * 60 * 1000 ? "text-red-500" : "text-blue-600";
-
   return (
-    <div className="flex flex-col md:flex-row max-w-7xl mx-auto border rounded-lg shadow-lg overflow-hidden my-8">
-      <div className="md:w-2/3 w-full p-6 border-r overflow-y-auto max-h-[700px]">
-        <h1 className="text-2xl font-bold mb-4">{auction.product?.name}</h1>
-        <img src={auction.product?.imageUrl} alt="product" className="w-full h-80 object-cover rounded mb-4" />
-        <p className="text-gray-700 mb-4">{auction.product?.description}</p>
-        <p className="text-lg">시작가: {auction.startPrice?.toLocaleString()}원</p>
-        <p className="text-xl font-bold mt-2">
-          현재 최고 입찰가: <span className="text-3xl text-green-600">{auction.currentBid?.toLocaleString()}원</span>
-        </p>
-        <p className={`mt-4 font-semibold ${timeLeftColor}`}>{timeLeft}</p>
-      </div>
-
-      <div className="md:w-1/3 w-full flex flex-col p-4 max-h-[700px]">
-        <h2 className="text-lg font-semibold mb-2">실시간 입찰 로그</h2>
-        <div ref={chatContainerRef} className="border rounded p-2 overflow-y-auto space-y-2 bg-gray-50 h-[500px]">
-          <AuctionChat messages={messages} />
+    <>
+      {auctionEndData && (
+        <Dialog open={showEndDialog} onOpenChange={setShowEndDialog}>
+          <DialogContent>
+            <DialogHeader><DialogTitle>🏆 경매 종료 🏆</DialogTitle></DialogHeader>
+            <p>낙찰자: {auctionEndData.winnerNickname}</p>
+            <p>낙찰 금액: {auctionEndData.winningBid.toLocaleString()}원</p>
+            <DialogFooter><Button onClick={() => router.push("/")}>메인으로 이동</Button></DialogFooter>
+          </DialogContent>
+        </Dialog>
+      )}
+      <div className="flex flex-col md:flex-row max-w-7xl mx-auto border rounded-lg shadow-lg overflow-hidden my-8 h-[700px]">
+        <div className="md:w-2/3 w-full p-6 border-r flex flex-col gap-4 overflow-y-auto">
+          <h1 className="text-2xl font-bold">{auction.product?.name}</h1>
+          <img src={auction.product?.imageUrl || "/default-image.jpg"} alt="product" className="w-full h-80 object-cover rounded" />
+          <p className="text-gray-700">{auction.product?.description}</p>
+          <p className="text-lg">시작가: {auction.startPrice.toLocaleString()}원</p>
+          <p className="text-xl font-bold">현재가: <span className="text-3xl text-green-600">{auction.currentBid.toLocaleString()}원</span></p>
+          <p className={`font-semibold ${timeLeftColor}`}>{timeLeft}</p>
         </div>
-        <div className="mt-4">
-          <AuctionForm highestBid={auction.currentBid} minBid={auction.minBid || 1000} onBid={handleBid} />
+        <div className="md:w-1/3 w-full p-4 flex flex-col gap-4">
+          <div ref={chatContainerRef} className="border rounded-lg bg-gray-100 p-3 overflow-y-auto flex-1 min-h-0">
+            <AuctionChat messages={messages} />
+          </div>
+          <AuctionForm highestBid={auction.currentBid} minBid={auction.minBid} onBid={handleBid} canBid={canBid} />
         </div>
       </div>
-    </div>
+    </>
   );
 }

@@ -1,11 +1,15 @@
 package org.example.bidflow.domain.user.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.example.bidflow.domain.user.entity.User;
 
 @Getter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserPutRequest {
 
     private String profileImage;

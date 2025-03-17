@@ -19,7 +19,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -54,13 +53,20 @@ public class AuctionService {
     //관리자- 모든 경매 목록을 조회 (관리자)
     @HasRole(Role.ADMIN)
     public List<AuctionAdminResponse> getAdminAllAuctions() {
-        //경매 목록과 관련된 상품 및 낙찰자 정보를 함께 가져옴
-        return Optional.ofNullable(auctionRepository.findAllAuctionsWithProductAndWinner())//경매 목록이 비어있는지 확인
-                .filter(auctions -> !auctions.isEmpty()) // 비어있거나 null이면 예외 투척
-                .orElseThrow(() -> new ServiceException("404", "경매 목록 조회 실패"))
-                .stream()//AuctionAdminResponse 변환
-                .map(AuctionAdminResponse::from)//변환완료된 AuctionAdminResponse 객체들을 리스트로 수집하여 반환
-                .collect(Collectors.toList());
+        List<Auction> auctions = auctionRepository.findAllAuctionsWithProductAndWinner();
+
+        if (auctions == null || auctions.isEmpty()) {
+            throw new ServiceException("404", "경매 목록 조회 실패");
+        }
+
+        return auctions.stream()
+                .map(auction -> {
+                    String hashKey = "auction:" + auction.getAuctionId();
+                    Integer amount = redisCommon.getFromHash(hashKey, "amount", Integer.class); // amount : Redis 에서 가져온 최고가
+                    log.info("amount: {}", amount);
+                    return AuctionAdminResponse.from(auction, amount);
+                })
+                .toList();
     }
 
     // 경매 등록 서비스 (관리자)

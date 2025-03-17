@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
+import { getAccessToken } from "@/lib/api/auth";
 
 interface User {
   nickname: string;
@@ -20,6 +21,7 @@ interface Auction {
 
 export default function MyPage() {
   const { userUUID } = useParams();
+  const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
   const [auctions, setAuctions] = useState<Auction[]>([]);
   const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api";
@@ -32,14 +34,20 @@ export default function MyPage() {
 
     console.log("현재 userUUID 값:", uuid);
 
+    const token = getAccessToken();
+    const headers = {
+      Authorization: `Bearer ${token}`,
+      "Content-Type":"application/json"
+    };
+
     // 사용자 정보 가져오기
-    fetch(`${API_BASE_URL}/auth/users/${uuid}`)
+    fetch(`${API_BASE_URL}/auth/users/${uuid}`, {headers})
       .then((res) => res.ok ? res.json() : null)
       .then((data) => data?.data && setUser(data.data))
       .catch(console.error);
 
     // 낙찰 받은 경매 목록 가져오기
-    fetch(`${API_BASE_URL}/auctions/${uuid}/winner`)
+    fetch(`${API_BASE_URL}/auctions/${uuid}/winner`, {headers})
       .then((res) => res.ok ? res.json() : null)
       .then((data) => data?.data && Array.isArray(data.data) ? setAuctions(data.data) : [])
       .catch(console.error);
@@ -56,7 +64,10 @@ export default function MyPage() {
           <p className="text-lg font-semibold">{user?.nickname || "닉네임"}</p>
           <p className="text-gray-600">{user?.email || "email@example.com"}</p>
         </div>
-        <button className="ml-auto px-3 py-2 bg-blue-500 text-white rounded">
+        <button 
+          className="ml-auto px-3 py-2 bg-blue-500 text-white rounded"
+          onClick={() => router.push("/mypage/edit")}
+        >
           수정
         </button>
       </div>
