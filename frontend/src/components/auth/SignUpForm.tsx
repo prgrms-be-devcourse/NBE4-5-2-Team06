@@ -36,7 +36,10 @@ export const SignUpForm = () => {
 
   const handleEmailVerification = async () => {
     try {
-      const response = await axios.post("http://localhost:8080/api/auth/send-code", { email });
+      const response = await axios.post(
+        "http://35.203.149.35:8080/api/auth/send-code",
+        { email }
+      );
       if (response.data.code === "200") {
         setShowVerificationInput(true);
         setTimer(180);
@@ -54,7 +57,10 @@ export const SignUpForm = () => {
 
   const handleCodeVerification = async () => {
     try {
-      const response = await axios.post("http://localhost:8080/api/auth/vertify", { email, code: inputCode });
+      const response = await axios.post(
+        "http://35.203.149.35:8080/api/auth/vertify",
+        { email, code: inputCode }
+      );
       if (response.data.code === "200") {
         setIsVerified(true);
         alert(response.data.msg);
@@ -123,7 +129,9 @@ export const SignUpForm = () => {
                   value={inputCode}
                   onChange={(e) => setInputCode(e.target.value)}
                   disabled={isBlocked || isVerified}
-                  className={`w-full p-3 pr-20 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400 focus:outline-none ${isBlocked || isVerified ? 'bg-gray-200' : ''}`}
+                  className={`w-full p-3 pr-20 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400 focus:outline-none ${
+                    isBlocked || isVerified ? "bg-gray-200" : ""
+                  }`}
                 />
                 <button
                   type="button"
@@ -134,7 +142,9 @@ export const SignUpForm = () => {
                   {isVerified ? "완료" : "확인"}
                 </button>
               </div>
-              <p className="text-sm text-gray-500 mt-2">{`남은 시간: ${Math.floor(timer / 60)}:${(timer % 60).toString().padStart(2, "0")}`}</p>
+              <p className="text-sm text-gray-500 mt-2">{`남은 시간: ${Math.floor(
+                timer / 60
+              )}:${(timer % 60).toString().padStart(2, "0")}`}</p>
             </>
           )}
 
@@ -175,9 +185,9 @@ export const SignUpForm = () => {
           </button>
 
           <p className="text-sm text-gray-500">
-            이미 회원이신가요?{' '}
+            이미 회원이신가요?{" "}
             <span
-              onClick={() => router.push('/auth/login')}
+              onClick={() => router.push("/auth/login")}
               className="text-blue-500 hover:underline cursor-pointer"
             >
               로그인

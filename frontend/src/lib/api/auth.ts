@@ -1,5 +1,5 @@
 export async function loginUser(email: string, password: string) {
-  const response = await fetch(`http://localhost:8080/api/auth/login`, {
+  const response = await fetch(`http://35.203.149.35:8080/api/auth/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, password }),
@@ -19,7 +19,7 @@ export async function signupUser(
   password: string,
   nickname: string
 ) {
-  const response = await fetch(`http://localhost:8080/api/auth/signup`, {
+  const response = await fetch(`http://35.203.149.35:8080/api/auth/signup`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, password, nickname }),
