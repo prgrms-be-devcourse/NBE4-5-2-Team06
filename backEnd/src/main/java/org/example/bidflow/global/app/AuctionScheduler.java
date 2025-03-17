@@ -61,7 +61,7 @@ public class AuctionScheduler {
                         .user(user)
                         .auction(auction.get())
                         .build();
-//
+
                 winnerRepository.save(winner);
             }
         }
