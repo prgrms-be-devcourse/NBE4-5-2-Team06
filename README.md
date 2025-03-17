@@ -34,17 +34,6 @@
 [✅ Redis가 적용된 기능의 Process ✅](https://github.com/prgrms-be-devcourse/NBE4-5-2-Team06/wiki/%E2%9C%85-Redis%EA%B0%80-%EC%A0%81%EC%9A%A9%EB%90%9C-%EA%B8%B0%EB%8A%A5%EC%9D%98-Process)
  
 <br/>
-
-## 4. 작업 및 역할 분담
-   |   이름   |                                     멋진  얼굴                                                    |                                   역할                                                               |
-   |-----|-----------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------|
-   | 문권이 | <img src="https://avatars.githubusercontent.com/u/102517739?v=4" alt="문권이" width="100"> | <ul></ul> |
-   | 박종서 | <img src="https://avatars.githubusercontent.com/u/184979256?v=4" alt="박종서" width="100">  | <ul></ul>|
-   | 박종현 | <img src="https://avatars.githubusercontent.com/u/149856960?v=4" alt="박종현" width="100"> | <ul></ul>|
-   | 서세훈 | <img src="https://avatars.githubusercontent.com/u/113406474?v=4" alt="서세훈" width="100">  | <ul></ul>|
-   | 조현우 | <img src="https://avatars.githubusercontent.com/u/151692425?v=4" alt="조현우" width="100">  | <ul></ul> |
-
-<br/>
 <br/>
 
 
