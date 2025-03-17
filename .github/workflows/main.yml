@@ -33,7 +33,7 @@ jobs:
           restore-keys: ${{ runner.os }}-gradle  # 캐시 복원 키
 
       - name: Make gradlew executable 
-        run: chmod +x backend/gradlew
+        run: chmod +x backEnd/gradlew
 
       - name: Build with Gradle  # Step 4: Gradle로 프로젝트 빌드
         run: ./backEnd/gradlew clean build  # Gradle의 clean 및 build 명령 실행
