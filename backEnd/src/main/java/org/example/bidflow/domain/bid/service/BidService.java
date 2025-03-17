@@ -28,50 +28,6 @@ public class BidService {
     private final RedisCommon redisCommon;
     private final JwtProvider jwtProvider;
 
-    /*@Transactional
-    public BidCreateResponse createBid(Long auctionId, AuctionBidRequest request) {
-
-        String key = "auction:" + auctionId;
-
-        // 사용자 검증
-        User user = userService.getUserByUuid(request.getUserUuid());
-
-        // 경매 상태 검증 🚩
-        Auction auction = auctionService.getAuctionWithValidation(auctionId);
-        BidInfo currentBid = redisCommon.getHashAsObject(key, BidInfo.class);
-
-        if (currentBid == null) { // 🚩
-
-            BidInfo newBid =  BidInfo.builder()
-                    .amount(request.getAmount())
-                    .userUuid(request.getUserUuid())
-                    .build();
-
-            redisCommon.putObjectAsHash(key, newBid);
-            currentBid = newBid;
-
-        }
-
-        if(request.getAmount() <= currentBid.getAmount() *//*amount*//*) {
-            throw new ServiceException(HttpStatus.BAD_REQUEST.toString(), "입찰 금액이 현재 최고가보다 낮습니다.");
-        }
-
-        // 최소 입찰 단위 검증 🚩
-        if (request.getAmount() < currentBid.getAmount() + auction.getMinBid()) {
-            throw new ServiceException(HttpStatus.BAD_REQUEST.toString(),
-                    "입찰 금액이 최소 입찰 단위보다 작습니다. 최소 " + (currentBid.getAmount() + auction.getMinBid()) + "원 이상 입찰해야 합니다.");
-        }
-        redisCommon.putAllInHash(key, Map.of("amount", request.getAmount(), "userUuid", request.getUserUuid()));
-
-        // 입찰 처리 (새로 생성하거나 금액 갱신)
-        Bid bid = Bid.createBid(auction, user, request.getAmount(), LocalDateTime.now());
-
-        // 입찰 저장
-        bidRepository.save(bid);
-
-        // BidDto 변환 후 반환
-        return BidCreateResponse.from(bid);
-    }*/
     @Transactional
     public BidCreateResponse createBid(Long auctionId, AuctionBidRequest request) {
         String hashKey = "auction:" + auctionId;
@@ -107,8 +63,6 @@ public class BidService {
 
         return BidCreateResponse.from(bid);
     }
-
-    // 0 -> o 105,0000
 
     // 경매 시간 유효성 검증
     private void validateAuctionTime(LocalDateTime now,  Auction auction) {
