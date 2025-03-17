@@ -4,7 +4,7 @@ server:
 spring:
   data:
     redis:
-      host: localhost
+      host: 35.203.149.35
       port: 6379
       password: "pk2258"
 
@@ -16,10 +16,10 @@ spring:
       fail-on-empty-beans: false
 
   datasource:
-    url: jdbc:h2:./db_dev;MODE=MySQL;INIT=RUNSCRIPT FROM 'classpath:data.sql'
-    username: sa
-    password:
-    driver-class-name: org.h2.Driver
+    url: jdbc:mysql://mysql:3306/awsTestDb?useSSL=false&allowPublicKeyRetrieval=true
+    username: root
+    password: pk2258
+    driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
       auto-commit: false
 
@@ -28,7 +28,7 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: false
-    database-platform: org.hibernate.dialect.H2Dialect
+    database-platform: org.hibernate.dialect.MySQL8Dialect
 
   h2:
     console:

@@ -1,0 +1,86 @@
+version: '3'
+
+services:
+  redis-master:
+    image: redis:latest
+    container_name: core-master
+    ports:
+      - "6379:6379"
+    command: ["redis-server", "--requirepass", "${REDIS_PASSWORD}"]
+#    networks:
+#      - redis-net
+    networks:
+      - app-network
+
+
+  #  redis-slave-1:
+#    image: redis:latest
+#    container_name: redis-slave-1
+#    ports:
+#      - "6380:6379"
+#    command: ["redis-server", "--slaveof", "redis-master", "6379", "--requirepass", "${REDIS_PASSWORD}", "--masterauth", "${REDIS_PASSWORD}", "--repl-ping-replica-period", "10", "--repl-timeout", "60"]
+#    networks:
+#      - redis-net
+
+#  redis-slave-2:
+#    image: redis:latest
+#    container_name: redis-slave-2
+#    ports:
+#      - "6381:6379"
+#    command: ["redis-server", "--slaveof", "redis-master", "6379", "--requirepass", "${REDIS_PASSWORD}", "--masterauth", "${REDIS_PASSWORD}", "--repl-ping-replica-period", "10", "--repl-timeout", "60"]
+#    networks:
+#      - redis-net
+
+  mysql:
+    image: mysql:8.0
+    container_name: app-mysql
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+#      - MYSQL_USER=root
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - app-network
+
+  spring-app:
+#    build: build/generated/sources/annotationProcessor/java/main
+    build: ./backEnd
+    container_name: spring-app
+    ports:
+      - "8080:8080"
+    depends_on:
+      - redis-master
+      - mysql
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/${MYSQL_DATABASE}?useSSL=false&allowPublicKeyRetrieval=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - SPRING_REDIS_HOST=redis-master
+      - SPRING_REDIS_PORT=6379
+      - SPRING_REDIS_PASSWORD=${REDIS_PASSWORD}
+    networks:
+      - app-network
+
+#networks:
+#  redis-net:
+#    driver: bridge
+
+  # 여기에 프론트엔드 서비스 추가
+  frontend:
+    build: ./frontend
+    container_name: next-frontend
+    ports:
+      - "3000:3000"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mysql-data:

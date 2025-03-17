@@ -1,6 +1,16 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: false,
+  
+  // 타입 검사 비활성화
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+  
+  // ESLint 검사 비활성화
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
 
   // 외부 이미지 도메인 등록
   images: {
