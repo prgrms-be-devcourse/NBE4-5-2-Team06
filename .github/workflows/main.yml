@@ -4,9 +4,6 @@ on:
   push:  # master 브랜치로의 푸시 이벤트 발생 시 워크플로우 실행
     branches:
       - main
-  pull_request:  # master 브랜치로의 풀 리퀘스트 이벤트 발생 시 워크플로우 실행
-    branches:
-      - main
 
 jobs:
   build:  # build라는 이름의 job 정의
