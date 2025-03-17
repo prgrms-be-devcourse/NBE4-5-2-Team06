@@ -36,7 +36,7 @@ jobs:
         run: chmod +x backEnd/gradlew
 
       - name: Build with Gradle # Step 4: Gradle로 프로젝트 빌드
-        working-directory: backend
+        working-directory: backEnd
         run: ./gradlew clean build  # Gradle의 clean 및 build 명령 실행
 
       - name: Login to Docker Hub  # Step 5: Docker Hub 로그인
