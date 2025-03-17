@@ -25,12 +25,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [token, setToken] = useState<string | null>(null); // 처음에는 null로 시작
 
   // 새로고침 시 localstorage에서 토큰 읽어옴
+  // useEffect(() => {
+  //   const storedToken = localStorage.getItem("token");
+  //   if (storedToken) {
+  //     setToken(storedToken); // localStorage에서 토큰 읽기
+  //   }
+  // }, []); // 최고 1회 실행
   useEffect(() => {
-    const storedToken = localStorage.getItem("token");
+    const storedToken = localStorage.getItem("accessToken"); // "token"에서 "accessToken"으로 변경
     if (storedToken) {
-      setToken(storedToken); // localStorage에서 토큰 읽기
+      setToken(storedToken);
     }
-  }, []); // 최고 1회 실행
+  }, []); // 최초 1회 실행
 
   return (
     <AuthContext.Provider value={{ token, setToken }}>
