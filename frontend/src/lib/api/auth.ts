@@ -1,4 +1,5 @@
 export async function loginUser(email: string, password: string) {
+  // 주소 변경 필요
   const response = await fetch(`http://35.203.149.35:8080/api/auth/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -19,6 +20,7 @@ export async function signupUser(
   password: string,
   nickname: string
 ) {
+  // 주소 변경 필요
   const response = await fetch(`http://35.203.149.35:8080/api/auth/signup`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },

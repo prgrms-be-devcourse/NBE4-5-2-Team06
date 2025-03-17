@@ -37,6 +37,7 @@ export const SignUpForm = () => {
   const handleEmailVerification = async () => {
     try {
       const response = await axios.post(
+        // 주소 변경 필요
         "http://35.203.149.35:8080/api/auth/send-code",
         { email }
       );
@@ -57,6 +58,7 @@ export const SignUpForm = () => {
 
   const handleCodeVerification = async () => {
     try {
+      // 주소 변경 필요
       const response = await axios.post(
         "http://35.203.149.35:8080/api/auth/vertify",
         { email, code: inputCode }
