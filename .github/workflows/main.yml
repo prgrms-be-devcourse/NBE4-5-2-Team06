@@ -43,6 +43,7 @@ jobs:
         run: docker login -u "${{ secrets.DOCKER_USERNAME }}" -p "${{ secrets.DOCKER_PASSWORD }}"  # GitHub Secrets에서 저장한 Docker 자격 증명 사용
 
       - name: Build Docker image  # Step 6: 어플리케이션용 Docker 이미지 빌드
+        working-directory: backEnd
         run: |
           docker build . -t ${{ secrets.DOCKER_USERNAME }}/be5:${{ github.sha }}  # GitHub SHA로 태그한 Docker 이미지 빌드
           docker tag ${{ secrets.DOCKER_USERNAME }}/be5:${{ github.sha }} ${{ secrets.DOCKER_USERNAME }}/be5:latest  # Docker 이미지를 'latest'로 태그
