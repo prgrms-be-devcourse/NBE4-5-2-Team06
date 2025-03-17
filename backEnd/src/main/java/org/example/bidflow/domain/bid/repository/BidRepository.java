@@ -10,7 +10,4 @@ import java.util.Optional;
 
 @Repository
 public interface BidRepository extends JpaRepository<Bid, Long> {
-    Optional<Bid> findTopByAuctionOrderByAmountDesc(Auction auction);
-
-    Optional<Bid> findByAuctionAndUser(Auction auction, User user);
 }

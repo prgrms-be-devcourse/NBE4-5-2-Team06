@@ -8,6 +8,10 @@ const nextConfig = {
       "store.storeimages.cdn-apple.com",
       "sitem.ssgcdn.com",
       "m.media-amazon.com",
+      "image.idus.com",
+      "www.sleepmed.or.kr",
+      "www.biz-con.co.kr",
+      "cdn.gpkorea.com", 
     ],
   },
 
