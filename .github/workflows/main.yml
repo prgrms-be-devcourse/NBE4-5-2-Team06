@@ -32,10 +32,11 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}  # Gradle 파일의 해시를 기반으로한 캐시 키
           restore-keys: ${{ runner.os }}-gradle  # 캐시 복원 키
 
+      - name: Make gradlew executable 
+        run: chmod +x backend/gradlew
+
       - name: Build with Gradle  # Step 4: Gradle로 프로젝트 빌드
-        run:
-          chmod +x ./backEnd/gradlew
-          ./backEnd/gradlew clean build  # Gradle의 clean 및 build 명령 실행
+        run: ./backEnd/gradlew clean build  # Gradle의 clean 및 build 명령 실행
 
       - name: Login to Docker Hub  # Step 5: Docker Hub 로그인
         run: docker login -u "${{ secrets.DOCKER_USERNAME }}" -p "${{ secrets.DOCKER_PASSWORD }}"  # GitHub Secrets에서 저장한 Docker 자격 증명 사용
