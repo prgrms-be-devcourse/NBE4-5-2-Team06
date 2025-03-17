@@ -64,4 +64,4 @@ jobs:
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/be5:${{ github.sha }}  # 특정 태그의 Docker 이미지 풀
             sudo docker stop be5 || true  # 실행 중인 Docker 컨테이너 중지 (오류 무시)
             sudo docker rm be5 || true  # Docker 컨테이너 삭제 (오류 무시)
-            sudo docker run -d -p 8080:8080 --network app-network --name be5 ${{ secrets.DOCKER_USERNAME }}/be5:${{ github.sha }}  # 지정된 옵션으로 Docker 컨테이너 실행
+            sudo docker run -d -p 8080:8080 --network nbe4-5-2-team06_app-network --name be5 ${{ secrets.DOCKER_USERNAME }}/be5:${{ github.sha }}  # 지정된 옵션으로 Docker 컨테이너 실행
