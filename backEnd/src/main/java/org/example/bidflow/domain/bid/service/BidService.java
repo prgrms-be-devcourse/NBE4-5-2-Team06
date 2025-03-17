@@ -89,4 +89,4 @@ public class BidService {
                     "입찰 금액이 최소 입찰 단위보다 작습니다. 최소 " + (currentAmount + minBidAmount) + "원 이상 입찰해야 합니다.");
         }
     }
-}
+}//
