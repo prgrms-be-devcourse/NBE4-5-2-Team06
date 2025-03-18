@@ -2,6 +2,7 @@ package org.example.bidflow.domain.user.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.example.bidflow.domain.user.dto.*;
 import org.example.bidflow.domain.user.service.JwtBlacklistService;
 import org.example.bidflow.domain.user.service.UserService;
@@ -16,6 +17,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/auth")
+@Slf4j
 public class UserController {
 
     private final UserService userService;
@@ -73,6 +75,7 @@ public class UserController {
     @PostMapping("/send-code")
     public ResponseEntity<RsData> sendVerticationCode(@RequestBody @Valid EmailSendRequest request)
     {
+        log.error("Request to send verification code failed: {}", request);
         emailService.sendVerificationCode(request.getEmail());
         RsData rsData = new RsData("200","인증코드가 전송되었습니다.");
         return ResponseEntity.ok(rsData);

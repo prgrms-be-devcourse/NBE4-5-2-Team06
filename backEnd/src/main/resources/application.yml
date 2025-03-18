@@ -51,6 +51,8 @@ spring:
           timeout: 20000 # SMTP 서버와의 통신 시 대기 시간 (20초, 밀리초 단위)
           connectiontimeout: 20000 # SMTP 서버와의 연결 시도 시간 (20초, 밀리초 단위)
           writetimeout: 20000 # SMTP 서버로 데이터 전송 시 대기 시간 (20초, 밀리초 단위)
+          starttls:
+            enable: true
 
 logging:
   level:
