@@ -12,7 +12,7 @@ export const connectStomp = (token: string): Client => {
   stompClient = new Client({
     webSocketFactory: () => {
       // SockJS 연결, 쿼리 파라미터로 토큰 전달 (핸드쉐이크)
-      return new SockJS(`http://localhost:8080/ws?token=${token}`);
+      return new SockJS(`http://35.203.149.35:8080/ws?token=${token}`);
     },
     connectHeaders: {
       Authorization: `Bearer ${token}`, // STOMP 연결 시 헤더에 토큰 추가

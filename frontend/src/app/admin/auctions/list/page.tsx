@@ -43,7 +43,7 @@ export default function AdminAuctionListPage() {
   const fetchAuctions = async () => {
     try {
       const token = localStorage.getItem("accessToken");
-      const response = await fetch("http://localhost:8080/api/admin/auctions", {
+      const response = await fetch("http://35.203.149.35:8080/api/admin/auctions", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

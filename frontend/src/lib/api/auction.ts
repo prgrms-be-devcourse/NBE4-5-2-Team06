@@ -1,4 +1,4 @@
-const API_BASE_URL = "http://localhost:8080/api";
+const API_BASE_URL = "http://35.203.149.35:8080/api";
 
 export const getAuctionDetail = async (auctionId: string) => {
   const res = await fetch(`${API_BASE_URL}/auctions/${auctionId}`);

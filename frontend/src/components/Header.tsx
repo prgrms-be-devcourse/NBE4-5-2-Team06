@@ -51,7 +51,7 @@ export function Header() {
       }
 
       // 서버에 로그아웃 요청 (Authorization 헤더로 토큰 전송)
-      const res = await fetch("http://localhost:8080/api/auth/logout", {
+      const res = await fetch("http://35.203.149.35:8080/api/auth/logout", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,

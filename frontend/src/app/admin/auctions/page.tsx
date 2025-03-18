@@ -41,7 +41,7 @@ export default function AdminAuctionCreatePage() {
     }
   
     try {
-      const response = await fetch("http://localhost:8080/api/admin/auctions", {
+      const response = await fetch("http://35.203.149.35:8080/api/admin/auctions", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
