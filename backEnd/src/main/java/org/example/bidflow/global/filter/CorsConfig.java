@@ -11,7 +11,7 @@ public class CorsConfig {
     @Bean
     public CorsFilter corsFilter() { // Security가 기대하는 CorsFilter
         CorsConfiguration config = new CorsConfiguration();
-        config.addAllowedOrigin("http://localhost:3000");
+//        config.addAllowedOrigin("http://localhost:3000");
         config.addAllowedOrigin("http://35.203.149.35");  // 배포 주소 추가
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
