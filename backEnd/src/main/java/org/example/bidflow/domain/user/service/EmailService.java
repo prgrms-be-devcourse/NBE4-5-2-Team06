@@ -4,6 +4,7 @@ import jakarta.mail.internet.MimeMessage;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.example.bidflow.domain.user.repository.UserRepository;
 import org.example.bidflow.global.app.RedisCommon;
 import org.example.bidflow.global.exception.ServiceException;
@@ -17,6 +18,7 @@ import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class EmailService {
 
     private final JavaMailSender mailSender;
@@ -29,6 +31,7 @@ public class EmailService {
 
         // 이메일이 이미 존재하는 경우 예외 발생
         if (userRepository.findByEmail(email).isPresent()) {
+            log.error("Email {} already exists", email);
             throw new ServiceException(HttpStatus.CONFLICT.value() + "", "이미 존재하는 이메일입니다.");
         }
 
@@ -67,6 +70,7 @@ public class EmailService {
 
             helper.setText(text, true); // HTML 이메일 전송 설정
             mailSender.send(message);
+            log.error("Send verification code failed: {}", email);
 
         } catch (Exception e) {
             throw new ServiceException(HttpStatus.INTERNAL_SERVER_ERROR.value() + "", "이메일 전송 중 오류가 발생했습니다.");
@@ -81,14 +85,21 @@ public class EmailService {
 
         String storedCode = redisCommon.getFromHash(hashKey, "code", String.class);
         // 3분이라는 TTL만료
-        if(storedCode == null){
-            throw new ServiceException("400","인증시간이 만료되었습니다.");
+        if (storedCode == null) {
+            log.error("Verification time expired for email(인증시간 만료): {}", email);
+            throw new ServiceException("400", "인증시간이 만료되었습니다.");
         }
-        if(storedCode.equals(code)) {
+
+        if (storedCode.equals(code)) {
             redisCommon.putInHash(hashKey, "vertify", "true");
             redisCommon.setExpireAt(hashKey, LocalDateTime.now().plusSeconds(EMAIL_AUTH_EXPIRATION));
+
+            log.error("Verification code matched for email(인증 코드 불일치): {}", email);
+
             return true;
         }
+
+        log.error("Verification code does not match for email(뭔가 문제가 생김(인증은 통과)): {}", email);
 
         return false;
     }
@@ -104,7 +115,7 @@ public class EmailService {
     public void deleteVerificationCode(String key) {
 
         String authHashKey = getAuthHashKey(key);
-        redisCommon.setExpireAt(authHashKey,LocalDateTime.now().plusSeconds(10));
+        redisCommon.setExpireAt(authHashKey, LocalDateTime.now().plusSeconds(10));
     }
 
     public boolean isVerificationExpired(String email) {
@@ -114,7 +125,7 @@ public class EmailService {
     }
 
     private String generateCode() {
-        return String.valueOf((int)(Math.random()* 900000) + 100000);
+        return String.valueOf((int) (Math.random() * 900000) + 100000);
     }
 
     private static String getAuthHashKey(String email) {
