@@ -24,7 +24,7 @@ export default function MyPage() {
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
   const [auctions, setAuctions] = useState<Auction[]>([]);
-  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api";
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://35.203.149.35:8080/api";
 
   useEffect(() => {
     let uuid = userUUID || localStorage.getItem("userUUID");

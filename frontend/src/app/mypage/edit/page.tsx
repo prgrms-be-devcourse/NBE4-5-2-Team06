@@ -18,7 +18,7 @@ export default function MyPageEdit() {
     const { userUUID } = getUserInfo();
 
     axios
-      .get(`http://localhost:8080/api/auth/users/${userUUID}`, {
+      .get(`http://35.203.149.35:8080/api/auth/users/${userUUID}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => {
@@ -58,7 +58,7 @@ export default function MyPageEdit() {
 
     try {
       await axios.put(
-        `http://localhost:8080/api/auth/users/${userUUID}`,
+        `http://35.203.149.35:8080/api/auth/users/${userUUID}`,
         {
           nickname,
           email,
