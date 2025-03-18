@@ -58,6 +58,9 @@ logging:
     org.hibernate.orm.jdbc.bind: TRACE
     org.hibernate.orm.jdbc.extract: TRACE
     org.springframework.transaction.interceptor: TRACE
+  slack:
+    webhook-uri: https://hooks.slack.com/services/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
+  config: classpath:logback-spring.xml
 
 springdoc:
   default-produces-media-type: application/json;charset=UTF-8
