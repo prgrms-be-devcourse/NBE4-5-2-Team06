@@ -25,7 +25,7 @@ public class WebSocketMessageBrokerConfig implements WebSocketMessageBrokerConfi
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         // 클라이언트가 연결할 엔드포인트
         registry.addEndpoint("/ws")         // -> ws://localhost:8080/ws
-                .setAllowedOriginPatterns("*") // CORS 허용 (모든 도메인 허용)
+                .setAllowedOrigins("http://35.203.149.35:3000") // CORS 허용 (모든 도메인 허용)
                 .addInterceptors(stompHandshakeHandler) // HandshakeInterceptor 추가 (JWT 검증)
                 .withSockJS();  // socket fallback 지원
     }

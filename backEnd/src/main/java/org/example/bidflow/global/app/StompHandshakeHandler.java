@@ -24,11 +24,11 @@ public class StompHandshakeHandler implements HandshakeInterceptor {
     @Override
     public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception {
         if (!(request instanceof ServletServerHttpRequest servletRequest)) {
+            log.error("WebSocket 요청이 HTTP 요청이 아닙니다.");
             throw new IllegalArgumentException("WebSocket 요청이 HTTP 요청이 아닙니다.");
         }
 
         HttpServletRequest httpRequest = servletRequest.getServletRequest();
-
         String token = extractToken(httpRequest);
 
         // WebSocket 세션 속성 저장
