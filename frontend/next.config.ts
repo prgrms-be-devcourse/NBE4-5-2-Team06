@@ -29,7 +29,7 @@ const nextConfig = {
     return [
       {
         source: "/api/auctions",
-        destination: "http://localhost:8080/api/auctions",
+        destination: "http://35.203.149.35:8080/api/auctions",
       },
     ];
   },
