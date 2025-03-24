@@ -46,24 +46,24 @@ services:
     networks:
       - app-network
 
-  spring-app:
-#    build: build/generated/sources/annotationProcessor/java/main
-    build: ./backEnd
-    container_name: spring-app
-    ports:
-      - "8080:8080"
-    depends_on:
-      - redis-master
-      - mysql
-    environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/${MYSQL_DATABASE}?useSSL=false&allowPublicKeyRetrieval=true
-      - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=${MYSQL_ROOT_PASSWORD}
-      - SPRING_REDIS_HOST=redis-master
-      - SPRING_REDIS_PORT=6379
-      - SPRING_REDIS_PASSWORD=${REDIS_PASSWORD}
-    networks:
-      - app-network
+#  spring-app:
+##    build: build/generated/sources/annotationProcessor/java/main
+#    build: ./backEnd
+#    container_name: spring-app
+#    ports:
+#      - "8080:8080"
+#    depends_on:
+#      - redis-master
+#      - mysql
+#    environment:
+#      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/${MYSQL_DATABASE}?useSSL=false&allowPublicKeyRetrieval=true
+#      - SPRING_DATASOURCE_USERNAME=root
+#      - SPRING_DATASOURCE_PASSWORD=${MYSQL_ROOT_PASSWORD}
+#      - SPRING_REDIS_HOST=redis-master
+#      - SPRING_REDIS_PORT=6379
+#      - SPRING_REDIS_PASSWORD=${REDIS_PASSWORD}
+#    networks:
+#      - app-network
 
 #networks:
 #  redis-net:
