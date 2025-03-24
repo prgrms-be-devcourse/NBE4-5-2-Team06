@@ -28,7 +28,7 @@ export default function AuctionCloseButton({
   const handleClose = async () => {
     try {
       setIsLoading(true);
-      const response = await fetch(`/api/auctions/${auctionId}/close`, {
+      const response = await fetch(`http://35.203.149.35:8080/api/auctions/${auctionId}/close`, {
         method: "POST",
       });
 
