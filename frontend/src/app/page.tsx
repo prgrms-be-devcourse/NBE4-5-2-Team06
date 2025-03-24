@@ -25,7 +25,7 @@ export default function AuctionPage() {
     setLoading(true);
     setError("");
     try {
-      const response = await fetch("/api/auctions");
+      const response = await fetch("http://35.203.149.35:8080/api/auctions");
       if (!response.ok) throw new Error("경매 목록 조회 실패");
       const data = await response.json();
       setAuctions(data.data);
