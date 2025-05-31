@@ -4,7 +4,7 @@ server:
 spring:
   data:
     redis:
-      host: 35.203.149.35
+      host: localhost
       port: 6379
       password: "pk2258"
 
@@ -16,7 +16,7 @@ spring:
       fail-on-empty-beans: false
 
   datasource:
-    url: jdbc:mysql://35.203.149.35:3306/awsTestDb?useSSL=false&allowPublicKeyRetrieval=true
+    url: jdbc:mysql://localhost:3306/bidFlow?useSSL=false&allowPublicKeyRetrieval=true
     username: root
     password: pk2258
     driver-class-name: com.mysql.cj.jdbc.Driver
